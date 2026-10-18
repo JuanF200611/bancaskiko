@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bancas Kiko | La confianza en tu jugada</title>
+    <link rel="icon" type="image/png" href="nuevologo.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --azul-rey: #0033a0;
+            --azul-oscuro: #001f5c;
+            --rojo: #d90000;
+            --dorado: #ffcc00;
+            --blanco: #ffffff;
+            --gris-fondo: #f4f7f6;
+            --texto-oscuro: #1e293b;
+            --texto-gris: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--gris-fondo); color: var(--texto-oscuro); overflow-x: hidden; scroll-behavior: smooth; }
+
+        /* --- HEADER Y MENÚ --- */
+        header {
+            background: linear-gradient(90deg, var(--azul-oscuro) 0%, var(--azul-rey) 100%);
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+            border-bottom: 3px solid var(--dorado);
+        }
+        .header-content {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 5%; max-width: 1400px; margin: 0 auto; gap: 20px;
+        }
+
+        /* --- LOGO + TEXTO (MEJORADO) --- */
+        .logo-container {
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none; cursor: pointer; transition: 0.3s;
+        }
+        .logo-container:hover { transform: scale(1.02); }
+        .logo-container img {
+            height: 65px; width: auto; object-fit: contain;
+            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.55));
+            transition: 0.3s;
+        }
+        .logo-text {
+            display: flex; flex-direction: column; justify-content: center;
+            line-height: 1;
+        }
+        .logo-title {
+            font-size: 24px; font-weight: 900; color: var(--blanco);
+            letter-spacing: 0.5px; text-transform: uppercase;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+            white-space: nowrap;
+        }
+        .logo-title span { color: var(--dorado); }
+        .logo-slogan {
+            font-size: 11px; font-weight: 600; color: #cbd5e1;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            margin-top: 4px; opacity: 0.9;
+            white-space: nowrap;
+        }
+
+        /* --- BOTÓN HAMBURGUESA --- */
+        .hamburger { 
+            display: none; 
+            font-size: 26px; 
+            cursor: pointer; 
+            color: var(--dorado); 
+            background: rgba(255,255,255,0.08); 
+            border: 2px solid var(--dorado); 
+            border-radius: 10px;
+            width: 46px; height: 46px;
+            align-items: center; justify-content: center;
+            transition: 0.3s; 
+            margin-left: auto;
+        }
+        .hamburger:hover { background: var(--dorado); color: var(--azul-oscuro); transform: scale(1.05); }
+
+        /* --- NAVEGACIÓN DESKTOP --- */
+        nav ul { display: flex; list-style: none; gap: 8px; align-items: center; }
+        nav a {
+            color: var(--blanco); text-decoration: none; font-weight: 600; font-size: 14px;
+            transition: all 0.3s; position: relative; padding: 10px 14px; border-radius: 10px;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        nav a i { font-size: 12px; opacity: 0.8; }
+        nav a:hover { color: var(--dorado); background: rgba(255,255,255,0.08); }
+        nav a::after { 
+            content: ''; position: absolute; width: 0; height: 3px; bottom: 4px; left: 50%;
+            transform: translateX(-50%); background: var(--dorado); transition: 0.3s; border-radius: 5px;
+        }
+        nav a:hover::after { width: 60%; }
+
+        /* Botón especial "Resultados" */
+        nav a.nav-highlight {
+            background: var(--dorado); color: var(--azul-oscuro);
+            font-weight: 800; box-shadow: 0 4px 12px rgba(255,204,0,0.35);
+        }
+        nav a.nav-highlight:hover {
+            background: white; color: var(--azul-oscuro);
+            transform: translateY(-2px); box-shadow: 0 6px 18px rgba(255,204,0,0.55);
+        }
+        nav a.nav-highlight::after { display: none; }
+
+        /* --- MENÚ MÓVIL --- */
+        .mobile-nav {
+            position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100vh;
+            background: linear-gradient(180deg, var(--azul-oscuro) 0%, #00123a 100%);
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column; padding-top: 30px; gap: 4px; z-index: 2000;
+            box-shadow: -8px 0 25px rgba(0,0,0,0.6); border-left: 4px solid var(--dorado);
+            overflow-y: auto;
+        }
+        .mobile-nav.active { right: 0; }
+
+        .mobile-nav-header {
+            display: flex; align-items: center; gap: 10px;
+            padding: 0 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 10px;
+        }
+        .mobile-nav-header img { height: 45px; }
+        .mobile-nav-header .mob-title {
+            font-size: 16px; font-weight: 900; color: var(--blanco);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .mobile-nav-header .mob-title span { color: var(--dorado); }
+        .mobile-nav-header .mob-slogan {
+            font-size: 9px; color: #94a3b8; letter-spacing: 1px;
+            text-transform: uppercase; margin-top: 2px;
+        }
+
+        .mobile-nav a {
+            color: var(--blanco); text-decoration: none; font-size: 16px; font-weight: 600;
+            display: flex; align-items: center; gap: 14px;
+            padding: 15px 22px; margin: 0 12px; border-radius: 10px;
+            transition: 0.25s;
+        }
+        .mobile-nav a i {
+            width: 22px; text-align: center; font-size: 15px; color: var(--dorado);
+            transition: 0.25s;
+        }
+        .mobile-nav a:hover, .mobile-nav a:active {
+            color: var(--dorado); background: rgba(255,204,0,0.08);
+            transform: translateX(4px);
+        }
+        .mobile-nav a:hover i { transform: scale(1.15); }
+
+        .mobile-nav a.mobile-highlight {
+            background: var(--dorado); color: var(--azul-oscuro);
+            font-weight: 800; margin-top: 10px;
+            box-shadow: 0 4px 14px rgba(255,204,0,0.4);
+        }
+        .mobile-nav a.mobile-highlight i { color: var(--azul-oscuro); }
+        .mobile-nav a.mobile-highlight:hover { background: white; }
+
+        .close-menu { 
+            position: absolute; top: 15px; right: 15px; font-size: 22px; 
+            color: var(--blanco); cursor: pointer; 
+            background: rgba(217,0,0,0.9); border: none;
+            width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.3s; box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        .close-menu:hover { background: var(--rojo); transform: rotate(90deg); }
+
+        .menu-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.65); z-index: 1999; opacity: 0; 
+            pointer-events: none; transition: 0.3s; backdrop-filter: blur(3px);
+        }
+        .menu-overlay.active { opacity: 1; pointer-events: auto; }
+
+        /* --- SLIDER DE ANUNCIOS --- */
+        .slider-container {
+            margin-top: 91px; width: 100%; height: 400px; 
+            background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-rey) 100%); 
+            position: relative; overflow: hidden; border-bottom: 5px solid var(--rojo);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .slide {
+            position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease-in-out;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .slide.active { opacity: 1; }
+        .slide img, .slide video { width: 100%; height: 100%; object-fit: contain; }
+
+        /* --- SECCIONES DE RESULTADOS --- */
+        .results-section { padding: 60px 5%; }
+        .bg-azul { background: var(--azul-oscuro); color: white; }
+        .bg-gris { background: var(--gris-fondo); color: var(--texto-oscuro); }
+        
+        .results-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; gap: 15px; text-align: center;}
+        .results-header h2 { font-size: 32px; font-weight: 900; color: var(--dorado); text-transform: uppercase; }
+        .bg-gris .results-header h2 { color: var(--azul-rey); }
+        
+        .grid-loterias { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .card-loteria { background: white; border-radius: 20px; padding: 20px; color: var(--texto-oscuro); text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.15); position: relative; overflow: hidden; }
+        .card-loteria::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--dorado); }
+        .card-loteria img { height: 60px; object-fit: contain; margin-bottom: 10px; }
+        .loteria-nombre { font-weight: 800; font-size: 18px; margin-bottom: 5px; color: var(--azul-rey); text-transform: uppercase; }
+        
+        .timer-box {
+            display: inline-flex; align-items: center; gap: 8px; background: #ffe4e6; color: var(--rojo);
+            padding: 8px 15px; border-radius: 20px; font-size: 16px; font-weight: 900; margin-bottom: 15px;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .bolos-container { display: flex; justify-content: center; gap: 12px; margin-bottom: 15px; }
+        .bolo { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); box-shadow: inset -4px -4px 10px rgba(0,0,0,0.2), inset 3px 3px 8px rgba(255,255,255,0.6), 0 5px 15px rgba(0,0,0,0.2); }
+        .bolo.hoy { background: radial-gradient(circle at 30% 30%, #60a5fa, #1e40af); color: white; }
+        .bolo.ayer { background: radial-gradient(circle at 30% 30%, #ffffff, #cbd5e1); color: var(--azul-oscuro); }
+
+        .fecha-tag { display: inline-block; background: var(--gris-fondo); padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 800; color: var(--texto-gris); text-transform: uppercase; }
+
+        .btn-ver-mas { display: inline-flex; align-items: center; gap: 10px; background: var(--dorado); color: var(--azul-oscuro); padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: 900; text-decoration: none; margin-top: 30px; cursor: pointer; border: none; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,204,0,0.4); }
+        .btn-ver-mas:hover { background: white; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,204,0,0.6); }
+
+        /* --- SECCIÓN ESTADÍSTICAS --- */
+        .stats-section { padding: 80px 5%; background: #0f172a; color: white; text-align: center; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 800px; margin: 0 auto; }
+        .stats-card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.1); }
+        .stats-card h3 { font-size: 22px; margin-bottom: 20px; text-transform: uppercase; }
+        .stats-card.calientes h3 { color: #ef4444; }
+        .stats-card.frios h3 { color: #3b82f6; }
+        .stats-bolos { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .stats-bolo { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; box-shadow: inset -3px -3px 8px rgba(0,0,0,0.3); }
+        .stats-card.calientes .stats-bolo { background: linear-gradient(135deg, #f87171, #b91c1c); color: white; }
+        .stats-card.frios .stats-bolo { background: linear-gradient(135deg, #93c5fd, #1d4ed8); color: white; }
+
+        /* --- SECCIÓN CÓMO JUGAR --- */
+        .how-to-play { padding: 80px 5%; background: var(--blanco); text-align: center; }
+        .section-title { font-size: 36px; font-weight: 900; color: var(--azul-rey); margin-bottom: 40px; position: relative; display: inline-block; text-transform: uppercase; }
+        .section-title::after { content: ''; position: absolute; width: 60%; height: 5px; background: var(--rojo); bottom: -10px; left: 20%; border-radius: 5px; }
+        
+        .play-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .play-card { background: var(--gris-fondo); padding: 30px; border-radius: 20px; border: 2px solid transparent; transition: 0.3s; text-align: left; }
+        .play-card:hover { border-color: var(--dorado); transform: translateY(-5px); background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .play-card h3 { font-size: 24px; color: var(--azul-rey); font-weight: 800; margin-bottom: 10px; text-align: center; }
+        .play-card p { color: var(--texto-gris); font-size: 14px; line-height: 1.6; margin-bottom: 20px; text-align: center; }
+        
+        .example-box { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;}
+        .example-row { display: flex; align-items: center; justify-content: space-between; }
+        .example-bolos { display: flex; gap: 5px; }
+        .bolo-sm { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; background: radial-gradient(circle at 30% 30%, #60a5fa, #1e40af); color: white; }
+        .pago-tag { background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 10px; font-weight: 800; font-size: 13px; text-align: center;}
+
+        /* --- SECCIÓN PRODUCTOS --- */
+        .products-section { padding: 80px 5%; background: var(--gris-fondo); text-align: center; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        
+        .product-card { 
+            background: white; padding: 30px 20px; border-radius: 20px; 
+            border: 2px solid transparent; transition: 0.3s; 
+            display: flex; flex-direction: column; align-items: center; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+        }
+        .product-card:hover { border-color: var(--dorado); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .product-card img { width: 70px; height: 70px; object-fit: contain; margin-bottom: 15px; padding: 10px; background: var(--gris-fondo); border-radius: 50%; }
+        .product-card h3 { font-size: 18px; color: var(--azul-rey); font-weight: 800; margin-bottom: 8px; }
+        .product-card p { color: var(--texto-gris); font-size: 13px; line-height: 1.5; }
+
+        footer { background: #000814; color: #94a3b8; text-align: center; padding: 40px 20px; font-size: 14px; border-top: 5px solid var(--rojo); }
+        footer strong { color: var(--dorado); font-size: 18px; }
+
+        /* --- BANNER DE CONEXIÓN --- */
+        #connBanner {
+            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+            padding: 12px 20px; border-radius: 10px; font-weight: 700;
+            font-size: 14px; color: white; transition: 0.4s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            opacity: 0; pointer-events: none;
+        }
+        #connBanner.show { opacity: 1; }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 900px) {
+            nav ul { gap: 4px; }
+            nav a { padding: 8px 10px; font-size: 13px; }
+            nav a i { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            nav ul { display: none; }
+            .logo-container img { height: 52px; }
+            .logo-title { font-size: 18px; }
+            .logo-slogan { font-size: 9px; letter-spacing: 1px; }
+            .slider-container { height: 250px; margin-top: 78px; }
+            .results-header h2, .section-title { font-size: 26px; }
+            .bolo { width: 45px; height: 45px; font-size: 18px; }
+            .stats-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 420px) {
+            .logo-title { font-size: 15px; }
+            .logo-slogan { font-size: 8px; }
+            .logo-container img { height: 44px; }
+            .hamburger { width: 42px; height: 42px; font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <!-- LOGO + TEXTO MEJORADO -->
+            <a href="#inicio" class="logo-container">
+                <img src="nuevologo.png" alt="Bancas Kiko">
+                <div class="logo-text">
+                    <div class="logo-title">Bancas <span>Kiko</span></div>
+                    <div class="logo-slogan">La confianza en tu jugada</div>
+                </div>
+            </a>
+
+            <button class="hamburger" onclick="toggleMenu()" aria-label="Abrir menú">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <nav>
+                <ul>
+                    <li><a href="#inicio"><i class="fas fa-home"></i>Inicio</a></li>
+                    <li><a href="#proximos"><i class="fas fa-hourglass-half"></i>Próximos</a></li>
+                    <li><a href="#recientes"><i class="fas fa-clock-rotate-left"></i>Últimos</a></li>
+                    <li><a href="#estadisticas"><i class="fas fa-chart-simple"></i>Estadísticas</a></li>
+                    <li><a href="#como-jugar"><i class="fas fa-circle-question"></i>Cómo Jugar</a></li>
+                    <li><a href="#productos"><i class="fas fa-store"></i>Productos</a></li>
+                    <li><a href="resultados.html" class="nav-highlight"><i class="fas fa-trophy"></i>Resultados</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MENÚ MÓVIL -->
+    <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+    <div class="mobile-nav" id="mobileNav">
+        <button class="close-menu" onclick="toggleMenu()" aria-label="Cerrar menú">
+            <i class="fas fa-times"></i>
+        </button>
+
+        <div class="mobile-nav-header">
+            <img src="nuevologo.png" alt="Bancas Kiko">
+            <div>
+                <div class="mob-title">Bancas <span>Kiko</span></div>
+                <div class="mob-slogan">La confianza en tu jugada</div>
+            </div>
+        </div>
+
+        <a href="#inicio" onclick="toggleMenu()"><i class="fas fa-home"></i>Inicio</a>
+        <a href="#proximos" onclick="toggleMenu()"><i class="fas fa-hourglass-half"></i>Próximos Sorteos</a>
+        <a href="#recientes" onclick="toggleMenu()"><i class="fas fa-clock-rotate-left"></i>Últimos Sorteos</a>
+        <a href="#estadisticas" onclick="toggleMenu()"><i class="fas fa-chart-simple"></i>Estadísticas</a>
+        <a href="#como-jugar" onclick="toggleMenu()"><i class="fas fa-circle-question"></i>Cómo Jugar</a>
+        <a href="#productos" onclick="toggleMenu()"><i class="fas fa-store"></i>Productos</a>
+        <a href="resultados.html" class="mobile-highlight" onclick="toggleMenu()"><i class="fas fa-trophy"></i>Resultados Completos</a>
+    </div>
+
+    <!-- SLIDER ANUNCIOS -->
+    <section class="slider-container" id="inicio">
+        <div id="sliderAdContainer" style="width:100%; height:100%;">
+            <div style="color:var(--dorado); font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; height:100%;">CARGANDO ANUNCIOS...</div>
+        </div>
+    </section>
+
+    <!-- PRÓXIMOS SORTEOS -->
+    <section class="results-section bg-azul" id="proximos">
+        <div class="results-header">
+            <h2>Próximos Sorteos a Salir</h2>
+            <p style="color:#cbd5e1;">Las loterías que están por cerrar</p>
+        </div>
+        <div class="grid-loterias" id="resultsGridProximos"></div>
+    </section>
+
+    <!-- 6 ÚLTIMOS SORTEOS -->
+    <section class="results-section bg-gris" id="recientes">
+        <div class="results-header">
+            <h2>Últimos Resultados</h2>
+            <p style="color:var(--texto-gris);">Los 6 sorteos que acaban de salir</p>
+        </div>
+        <div class="grid-loterias" id="resultsGridRecientes"></div>
+        
+        <div style="text-align: center;">
+            <a href="resultados.html" class="btn-ver-mas">Ver todos los resultados <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- ESTADÍSTICAS DE NÚMEROS -->
+    <section class="stats-section" id="estadisticas">
+        <h2 class="section-title" style="color: white; margin-bottom: 40px;">Estadísticas de Números</h2>
+        <p style="color: #94a3b8; margin-bottom: 40px;">Números que más y menos han salido en los últimos resultados</p>
+        
+        <div class="stats-grid">
+            <div class="stats-card calientes">
+                <h3><i class="fas fa-fire"></i> Más Calientes</h3>
+                <div class="stats-bolos" id="statsCalientes"></div>
+            </div>
+            <div class="stats-card frios">
+                <h3><i class="fas fa-snowflake"></i> Más Fríos</h3>
+                <div class="stats-bolos" id="statsFrios"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CÓMO JUGAR Y GANAR -->
+    <section class="how-to-play" id="como-jugar">
+        <h2 class="section-title">¿Cómo Jugar y Ganar?</h2>
+        <p style="color: var(--texto-gris); margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
+            Conoce nuestras modalidades de juego. Las ganancias indicadas son <strong>por cada peso apostado (RD$1)</strong>.
+        </p>
+        
+        <div class="play-grid">
+            <div class="play-card">
+                <h3>Quiniela</h3>
+                <p>Acierta 1 número en la posición exacta.</p>
+                <div class="example-box">
+                    <div class="example-row">
+                        <span style="font-weight:700; color:var(--texto-gris);">1ra Posición</span>
+                        <div class="example-bolos"><div class="bolo-sm">21</div></div>
+                        <span class="pago-tag">Ganas x 60</span>
+                    </div>
+                    <div class="example-row">
+                        <span style="font-weight:700; color:var(--texto-gris);">2da Posición</span>
+                        <div class="example-bolos"><div class="bolo-sm">21</div></div>
+                        <span class="pago-tag">Ganas x 8</span>
+                    </div>
+                    <div class="example-row">
+                        <span style="font-weight:700; color:var(--texto-gris);">3ra Posición</span>
+                        <div class="example-bolos"><div class="bolo-sm">21</div></div>
+                        <span class="pago-tag">Ganas x 4</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="play-card">
+                <h3>Palé</h3>
+                <p>Acierta 2 números en las posiciones que elijas.</p>
+                <div class="example-box">
+                    <div class="example-row">
+                        <span style="font-weight:700; color:var(--texto-gris);">1ra y 2da</span>
+                        <div class="example-bolos"><div class="bolo-sm">21</div><div class="bolo-sm">45</div></div>
+                        <span class="pago-tag">Ganas x 1,000</span>
+                    </div>
+                    <div class="example-row">
+                        <span style="font-weight:700; color:var(--texto-gris);">1ra y 3ra</span>
+                        <div class="example-bolos"><div class="bolo-sm">21</div><div class="bolo-sm">45</div></div>
+                        <span class="pago-tag">Ganas x 1,000</span>
+                    </div>
+                    <div class="example-row">
+                        <span style="font-weight:700; color:var(--texto-gris);">2da y 3ra</span>
+                        <div class="example-bolos"><div class="bolo-sm">21</div><div class="bolo-sm">45</div></div>
+                        <span class="pago-tag">Ganas x 100</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="play-card">
+                <h3>Super Palé</h3>
+                <p>Combina 2 loterías. Acierta los primeros números de ambas.</p>
+                <div class="example-box">
+                    <div class="example-row">
+                        <span style="font-weight:700; color:var(--texto-gris);">Lot. A - 1ra</span>
+                        <div class="example-bolos"><div class="bolo-sm">21</div></div>
+                    </div>
+                    <div class="example-row">
+                        <span style="font-weight:700; color:var(--texto-gris);">Lot. B - 1ra</span>
+                        <div class="example-bolos"><div class="bolo-sm">45</div></div>
+                    </div>
+                    <div class="example-row" style="border-top: 1px dashed #ccc; padding-top:10px;">
+                        <span style="font-weight:800; color:var(--azul-rey);">Si aciertas ambas:</span>
+                        <span class="pago-tag" style="font-size:15px; background:#dcfce7;">Ganas x 3,000</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="play-card">
+                <h3>Tripleta</h3>
+                <p>Acierta los 3 números exactos en el orden correcto.</p>
+                <div class="example-box">
+                    <div class="example-row">
+                        <span style="font-weight:700; color:var(--texto-gris);">Los 3 números</span>
+                        <div class="example-bolos"><div class="bolo-sm">21</div><div class="bolo-sm">45</div><div class="bolo-sm">02</div></div>
+                        <span class="pago-tag">Ganas x 20,000</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUCTOS Y SERVICIOS -->
+    <section class="products-section" id="productos">
+        <h2 class="section-title">Nuestros Productos y Servicios</h2>
+        <p style="color: var(--texto-gris); margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
+            Además de las jugadas, ofrecemos múltiples servicios para tu comodidad.
+        </p>
+        <div class="products-grid" id="productsGrid"></div>
+    </section>
+
+    <footer>
+        <p>&copy; <span id="yearActual"></span> <strong>Bancas Kiko</strong></p>
+        <p style="margin-top: 10px; font-size: 12px;">La confianza en su jugada. Prohibido para menores de edad.</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script>
+        /* ============================================================
+           CONFIGURACIÓN FIREBASE
+        ============================================================ */
+        const firebaseConfig = { databaseURL: "https://pizarra-loteria-36ba5-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        /* ============================================================
+           ACTUALIZAR AÑO AUTOMÁTICAMENTE
+        ============================================================ */
+        document.getElementById('yearActual').textContent = new Date().getFullYear();
+
+        /* ============================================================
+           UTILIDADES GLOBALES
+        ============================================================ */
+        function toggleMenu() {
+            document.getElementById('mobileNav').classList.toggle('active');
+            document.getElementById('menuOverlay').classList.toggle('active');
+        }
+
+        let TODOS_LOS_RESULTADOS = [];
+        let LOGOS = {};
+        let slides = [];
+        let slideIndex = 0;
+        let proximosSorteesGlobal = [];
+        let sliderIntervalId = null;
+
+        /* ============================================================
+           HELPERS DE FECHA (CORREGIDO PARA ZONA HORARIA DE RD)
+        ============================================================ */
+        function getFechaStr(offsetDias = 0) {
+            const d = new Date();
+            d.setDate(d.getDate() + offsetDias);
+            
+            // Usamos getFullYear, getMonth y getDate para obtener la fecha LOCAL
+            const año = d.getFullYear();
+            const mes = String(d.getMonth() + 1).padStart(2, '0');
+            const dia = String(d.getDate()).padStart(2, '0');
+            
+            return `${año}-${mes}-${dia}`;
+        }
+
+        /* ============================================================
+           1. ESTADO DE CONEXIÓN EN TIEMPO REAL
+        ============================================================ */
+        (function initConnectionBanner() {
+            const banner = document.createElement('div');
+            banner.id = 'connBanner';
+            document.body.appendChild(banner);
+
+            database.ref('.info/connected').on('value', snap => {
+                const online = snap.val() === true;
+                if (online) {
+                    banner.style.background = '#16a34a';
+                    banner.innerHTML = '<i class="fas fa-wifi"></i> En línea';
+                    banner.classList.add('show');
+                    setTimeout(() => banner.classList.remove('show'), 2500);
+                } else {
+                    banner.style.background = '#dc2626';
+                    banner.innerHTML = '<i class="fas fa-plug"></i> Sin conexión, reintentando...';
+                    banner.classList.add('show');
+                }
+            });
+        })();
+
+        /* ============================================================
+           2. ANUNCIOS EN TIEMPO REAL (slider limpio)
+        ============================================================ */
+        database.ref('anunciosList').on('value', snap => {
+            slides = [];
+            if (snap.exists()) snap.forEach(child => {
+                const data = child.val();
+                if (data.activo !== false && data.url) slides.push(data);
+            });
+            initSlider();
+        });
+
+        function initSlider() {
+            const container = document.getElementById('sliderAdContainer');
+            if (!container) return;
+
+            if (sliderIntervalId) { clearInterval(sliderIntervalId); sliderIntervalId = null; }
+
+            if (slides.length === 0) {
+                container.innerHTML = `<div style="color:var(--dorado); font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; height:100%;">BANCAS KIKO</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            slideIndex = 0;
+
+            slides.forEach((ad, i) => {
+                const div = document.createElement('div');
+                div.className = 'slide' + (i === 0 ? ' active' : '');
+                const url = ad.url;
+                if (url.includes('.mp4') || url.includes('raw.githubusercontent')) {
+                    div.innerHTML = `<video src="${url}" autoplay muted loop playsinline></video>`;
+                } else {
+                    div.innerHTML = `<img src="${url}" alt="Anuncio">`;
+                }
+                container.appendChild(div);
+            });
+
+            if (slides.length > 1) {
+                sliderIntervalId = setInterval(() => {
+                    const currentSlides = document.querySelectorAll('.slide');
+                    if (currentSlides.length === 0) return;
+                    currentSlides.forEach(s => s.classList.remove('active'));
+                    slideIndex = (slideIndex + 1) % currentSlides.length;
+                    currentSlides[slideIndex].classList.add('active');
+                }, 5000);
+            }
+        }
+
+        /* ============================================================
+           3. LOGOS EN TIEMPO REAL
+        ============================================================ */
+        database.ref('web_kiko/logos').on('value', snap => {
+            LOGOS = snap.val() || {};
+            if (TODOS_LOS_RESULTADOS.length > 0) {
+                renderProximos();
+                renderRecientes();
+            }
+        });
+
+        /* ============================================================
+           4. RESULTADOS EN TIEMPO REAL
+        ============================================================ */
+        database.ref('sorteos_enloteria/resultados').on('value', snap => {
+            TODOS_LOS_RESULTADOS = [];
+            if (snap.exists()) snap.forEach(child => {
+                const data = child.val();
+                if (data) TODOS_LOS_RESULTADOS.push(data);
+            });
+            TODOS_LOS_RESULTADOS.sort((a, b) => new Date(b.enviadoEn) - new Date(a.enviadoEn));
+
+            renderProximos();
+            renderRecientes();
+            calcularEstadisticas();
+        });
+
+        /* ============================================================
+           5. PRODUCTOS EN TIEMPO REAL
+        ============================================================ */
+        database.ref('web_kiko/productos').on('value', snap => {
+            const grid = document.getElementById('productsGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            if (snap.exists() && snap.numChildren() > 0) {
+                snap.forEach(child => {
+                    const p = child.val();
+                    grid.innerHTML += `
+                        <div class="product-card">
+                            <img src="${p.logo || 'https://placehold.co/100x100?text=Logo'}" alt="${p.nombre}">
+                            <h3>${p.nombre}</h3>
+                            <p>${p.descripcion || 'Servicio disponible en nuestras sucursales.'}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                const defaultProducts = [
+                    { nombre: 'Venta de Loterías', desc: 'Juega Quinielas, Palés, Tripleta y Super Palé en todas las loterías.', logo: 'https://placehold.co/100x100/0033a0/fff?text=Loterias' },
+                    { nombre: 'Recargas Telefónicas', desc: 'Recarga tu teléfono de cualquier compañía al instante.', logo: 'https://placehold.co/100x100/ffcc00/000?text=Recargas' },
+                    { nombre: 'Pago de Servicios', desc: 'Paga tu luz, agua, cable e internet sin filas.', logo: 'https://placehold.co/100x100/001f5c/fff?text=Servicios' },
+                    { nombre: 'Pago de Facturas', desc: 'Realiza el pago de tus facturas de forma rápida y segura.', logo: 'https://placehold.co/100x100/d90000/fff?text=Facturas' }
+                ];
+                defaultProducts.forEach(p => {
+                    grid.innerHTML += `
+                        <div class="product-card">
+                            <img src="${p.logo}" alt="${p.nombre}">
+                            <h3>${p.nombre}</h3>
+                            <p>${p.desc}</p>
+                        </div>
+                    `;
+                });
+            }
+        });
+
+        /* ============================================================
+           6. HORA REAL DE LOTERÍA
+        ============================================================ */
+        function obtenerHoraRealLoteria(nombre, horaOriginal) {
+            const hoy = new Date().getDay();
+            const n = nombre.toLowerCase();
+            if (n.includes('leidsa') && n.includes('4:00')) {
+                if (hoy !== 0) return null;
+            }
+            if (n.includes('nacional') && n.includes('noche')) {
+                if (hoy === 0) return '06:00PM';
+                else return '09:00PM';
+            }
+            return horaOriginal;
+        }
+
+        /* ============================================================
+           7. RENDER PRÓXIMOS
+        ============================================================ */
+        function renderProximos() {
+            const grid = document.getElementById('resultsGridProximos');
+            if (!grid) return;
+            const hoyStr = getFechaStr(0); 
+
+            const ultimoPorLoteria = new Map();
+            TODOS_LOS_RESULTADOS.forEach(r => {
+                if (!ultimoPorLoteria.has(r.nombre)) ultimoPorLoteria.set(r.nombre, r);
+            });
+
+            proximosSorteesGlobal = [];
+
+            ultimoPorLoteria.forEach(r => {
+                const horaReal = obtenerHoraRealLoteria(r.nombre, r.hora);
+                if (!horaReal) return;
+
+                const infoTiempo = calcularTiempoRestante(horaReal);
+                if (infoTiempo.minutosTotales >= 0 && infoTiempo.minutosTotales <= 180) {
+                    proximosSorteesGlobal.push({ ...r, horaMostrar: horaReal, infoTiempo });
+                }
+            });
+
+            proximosSorteesGlobal.sort((a, b) => a.infoTiempo.minutosTotales - b.infoTiempo.minutosTotales);
+            
+            // ✅ AHORA MUESTRA LOS PRÓXIMOS 6 SORTEOS
+            proximosSorteesGlobal = proximosSorteesGlobal.slice(0, 6);
+
+            if (proximosSorteesGlobal.length === 0) {
+                grid.innerHTML = `<div style="color:white; grid-column: 1/-1; text-align:center; padding: 20px;">No hay sorteos próximos en las siguientes horas.</div>`;
+                return;
+            }
+
+            grid.innerHTML = '';
+            proximosSorteesGlobal.forEach(r => {
+                const logoUrl = getLogo(r.nombre);
+                const nums = r.numeros || ['-','-','-'];
+                const esHoy = r.fechaRD === hoyStr;
+                const boloClass = esHoy ? 'hoy' : 'ayer';
+                const tagFecha = esHoy ? 'HOY' : 'AYER';
+
+                grid.innerHTML += `
+                    <div class="card-loteria">
+                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'">` : `<div class="loteria-nombre" style="height:60px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
+                        <div class="loteria-nombre">${r.nombre}</div>
+                        <div class="timer-box" id="timer_${r.nombre.replace(/\s+/g, '')}"><i class="far fa-clock"></i> Calculando...</div>
+                        <div class="bolos-container">
+                            <div class="bolo ${boloClass}">${nums[0]}</div>
+                            <div class="bolo ${boloClass}">${nums[1]}</div>
+                            <div class="bolo ${boloClass}">${nums[2]}</div>
+                        </div>
+                        <div class="fecha-tag">${tagFecha} · ${r.horaMostrar}</div>
+                    </div>
+                `;
+            });
+
+            actualizarTimersEnVivo();
+        }
+
+        /* ============================================================
+           8. RENDER RECIENTES
+        ============================================================ */
+        function renderRecientes() {
+            const grid = document.getElementById('resultsGridRecientes');
+            if (!grid) return;
+            const hoyStr = getFechaStr(0); 
+            const top6 = TODOS_LOS_RESULTADOS.slice(0, 6);
+
+            if (top6.length === 0) {
+                grid.innerHTML = `<div style="color:var(--texto-gris); grid-column: 1/-1; text-align:center; padding: 20px;">Cargando resultados...</div>`;
+                return;
+            }
+
+            grid.innerHTML = '';
+            top6.forEach(r => {
+                const logoUrl = getLogo(r.nombre);
+                const nums = r.numeros || ['--','--','--'];
+                const esHoy = r.fechaRD === hoyStr;
+                const boloClass = esHoy ? 'hoy' : 'ayer';
+
+                grid.innerHTML += `
+                    <div class="card-loteria">
+                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'">` : `<div class="loteria-nombre" style="height:60px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
+                        <div class="loteria-nombre">${r.nombre}</div>
+                        <div class="bolos-container">
+                            <div class="bolo ${boloClass}">${nums[0]}</div>
+                            <div class="bolo ${boloClass}">${nums[1]}</div>
+                            <div class="bolo ${boloClass}">${nums[2]}</div>
+                        </div>
+                        <div class="fecha-tag">${esHoy ? 'HOY' : (r.fecha || 'AYER')} · ${r.hora || ''}</div>
+                    </div>
+                `;
+            });
+        }
+
+        /* ============================================================
+           9. ESTADÍSTICAS
+        ============================================================ */
+        function calcularEstadisticas() {
+            const conteo = {};
+            TODOS_LOS_RESULTADOS.forEach(r => {
+                if (r.numeros && Array.isArray(r.numeros)) {
+                    r.numeros.forEach(num => {
+                        if (num && num !== '--') {
+                            const n = num.toString().padStart(2, '0');
+                            conteo[n] = (conteo[n] || 0) + 1;
+                        }
+                    });
+                }
+            });
+
+            const arrayNumeros = Object.keys(conteo).map(num => ({ num, count: conteo[num] }));
+            arrayNumeros.sort((a, b) => b.count - a.count);
+
+            const topCalientes = arrayNumeros.slice(0, 5);
+            document.getElementById('statsCalientes').innerHTML = topCalientes.map(item =>
+                `<div class="stats-bolo" title="Ha salido ${item.count} veces">${item.num}</div>`
+            ).join('');
+
+            const topFrios = arrayNumeros.slice(-5).reverse();
+            document.getElementById('statsFrios').innerHTML = topFrios.map(item =>
+                `<div class="stats-bolo" title="Ha salido ${item.count} veces">${item.num}</div>`
+            ).join('');
+        }
+
+        /* ============================================================
+           10. TIMERS
+        ============================================================ */
+        function actualizarTimersEnVivo() {
+            proximosSorteesGlobal.forEach(r => {
+                const timerEl = document.getElementById(`timer_${r.nombre.replace(/\s+/g, '')}`);
+                if (!timerEl) return;
+
+                const info = calcularTiempoRestante(r.horaMostrar);
+                if (info.minutosTotales <= 0 && info.segundosTotales <= 0) {
+                    timerEl.innerHTML = `<i class="fas fa-hourglass-end"></i> Sorteando...`;
+                    timerEl.style.background = "#fff3cd";
+                    timerEl.style.color = "#856404";
+                } else {
+                    timerEl.innerHTML = `<i class="far fa-clock"></i> ${info.texto}`;
+                }
+            });
+        }
+
+        function calcularTiempoRestante(horaStr) {
+            if (!horaStr) return { texto: '--:--', minutosTotales: 9999, segundosTotales: 0 };
+            const match = horaStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+            if (!match) return { texto: '--:--', minutosTotales: 9999, segundosTotales: 0 };
+
+            let h = parseInt(match[1]);
+            const m = parseInt(match[2]);
+            const ampm = match[3].toUpperCase();
+
+            if (ampm === 'PM' && h !== 12) h += 12;
+            if (ampm === 'AM' && h === 12) h = 0;
+
+            const ahora = new Date();
+            const sorteo = new Date();
+            sorteo.setHours(h, m, 0, 0);
+
+            let diff = sorteo - ahora;
+            if (diff < 0) {
+                sorteo.setDate(sorteo.getDate() + 1);
+                diff = sorteo - ahora;
+            }
+
+            const horasRestantes = Math.floor(diff / (1000 * 60 * 60));
+            const minutosRestantes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const segundosRestantes = Math.floor((diff % (1000 * 60)) / 1000);
+            const totalMinutos = (horasRestantes * 60) + minutosRestantes;
+
+            let texto;
+            if (horasRestantes > 0) {
+                texto = `${horasRestantes.toString().padStart(2,'0')}h ${minutosRestantes.toString().padStart(2,'0')}m ${segundosRestantes.toString().padStart(2,'0')}s`;
+            } else {
+                texto = `${minutosRestantes.toString().padStart(2,'0')}m ${segundosRestantes.toString().padStart(2,'0')}s`;
+            }
+
+            return { texto, minutosTotales: totalMinutos, segundosTotales: segundosRestantes };
+        }
+
+        /* ============================================================
+           11. HELPER LOGOS
+        ============================================================ */
+        function getLogo(nombre) {
+            if (!nombre) return '';
+            if (LOGOS[nombre]) return LOGOS[nombre];
+            const n = nombre.toLowerCase();
+            for (const [k, v] of Object.entries(LOGOS)) {
+                if (k === '_default') continue;
+                if (n.includes(k.toLowerCase()) || k.toLowerCase().includes(n)) return v;
+            }
+            return LOGOS['_default'] || '';
+        }
+
+        /* ============================================================
+           12. LOOPS EN VIVO
+        ============================================================ */
+        setInterval(actualizarTimersEnVivo, 1000);
+
+        setInterval(() => {
+            if (TODOS_LOS_RESULTADOS.length > 0) renderProximos();
+        }, 30000);
+
+        setInterval(() => {
+            if (TODOS_LOS_RESULTADOS.length > 0) calcularEstadisticas();
+        }, 5 * 60 * 1000);
+
+        setInterval(() => {
+            if (TODOS_LOS_RESULTADOS.length > 0) renderRecientes();
+        }, 60 * 1000);
+    </script>
+</body>
+</html>

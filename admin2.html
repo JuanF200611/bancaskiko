@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Web | Bancas Kiko</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #001f5c; --card: #0033a0; --border: #1e3a8a;
+            --primary: #ffcc00; --text: #ffffff; --muted: #93c5fd;
+            --rojo: #d90000;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--text); padding: 20px; }
+        .dashboard { max-width: 1000px; margin: 0 auto; }
+        
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--border); padding-bottom: 20px; }
+        header h1 { font-size: 24px; color: var(--primary); }
+
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn {
+            padding: 12px 24px; background: var(--card); border: 1px solid var(--border);
+            color: var(--text); border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;
+        }
+        .tab-btn.active { background: var(--primary); color: var(--bg); border-color: var(--primary); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .card { background: var(--card); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); }
+        .card h2 { font-size: 18px; margin-bottom: 15px; border-left: 4px solid var(--primary); padding-left: 10px; color: var(--primary); }
+
+        input[type="text"], input[type="url"] {
+            width: 100%; padding: 15px; background: var(--bg); border: 1px solid var(--border);
+            color: white; border-radius: 8px; margin-bottom: 10px; font-family: inherit;
+        }
+        input:focus { outline: 2px solid var(--primary); }
+        
+        .btn {
+            padding: 12px 24px; border: none; border-radius: 8px; font-weight: 800;
+            cursor: pointer; color: var(--bg); transition: 0.2s; background: var(--primary);
+        }
+        .btn:hover { filter: brightness(1.1); }
+        .btn-danger { background: var(--rojo); color: white; }
+
+        .item-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .item {
+            display: flex; gap: 15px; align-items: center; background: rgba(0,0,0,0.2);
+            padding: 15px; border-radius: 8px; border: 1px solid var(--border);
+        }
+        .item img, .item video { width: 80px; height: 60px; object-fit: contain; background: #000; border-radius: 8px; }
+        .item-info { flex: 1; overflow: hidden; }
+        .item-info .nombre { font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 4px;}
+        .item-info input { margin: 0; padding: 8px 10px; font-size: 12px; color: var(--muted); }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <header>
+            <h1>⚙️ Admin Web Bancas Kiko</h1>
+            <a href="index.html" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: bold;">Ver Web Pública →</a>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('logos')">🖼️ Lista de Loterías (Logos)</button>
+            <button class="tab-btn" onclick="switchTab('anuncios')">📢 Anuncios Web</button>
+        </div>
+
+        <!-- TAB LOGOS -->
+        <div class="tab-content active" id="tab-logos">
+            <div class="card">
+                <h2>Asignar Logos a las Loterías</h2>
+                <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">
+                    Esta lista se carga automáticamente de las loterías registradas en la base de datos. Solo pega el enlace de la imagen (GitHub) al lado de cada una.
+                </p>
+                <div class="item-list" id="listaLogos">
+                    <p style="color:var(--muted);">Cargando loterías...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB ANUNCIOS -->
+        <div class="tab-content" id="tab-anuncios">
+            <div class="card">
+                <h2>Agregar Anuncio</h2>
+                <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">
+                    Se guardan en la misma lista <code>anunciosList</code> que usa la pizarra, por lo que los anuncios se compartirán.
+                </p>
+                <input type="url" id="anuncioUrl" placeholder="https://... (Imagen JPG/PNG o Video MP4)">
+                <button class="btn" onclick="guardarAnuncio()">💾 Guardar Anuncio</button>
+            </div>
+            <div class="card">
+                <h2>Anuncios Activos (Misma lista que pizarra)</h2>
+                <div class="item-list" id="listaAnuncios"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = { databaseURL: "https://pizarra-loteria-36ba5-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+            document.getElementById(`tab-${tab}`).classList.add('active');
+        }
+
+        // --- LOGOS (Loterías Dinámicas) ---
+        let LOGOS_ACTUALES = {};
+        let LOTERIAS_UNICAS = new Set();
+
+        // 1. Escuchar logos guardados
+        database.ref('web_kiko/logos').on('value', snap => {
+            LOGOS_ACTUALES = snap.val() || {};
+            renderListaLogos();
+        });
+
+        // 2. Escuchar los resultados para extraer los nombres de las loterías
+        database.ref('sorteos_enloteria/resultados').on('value', snap => {
+            LOTERIAS_UNICAS.clear();
+            if(snap.exists()) {
+                snap.forEach(child => {
+                    const data = child.val();
+                    if(data && data.nombre) {
+                        LOTERIAS_UNICAS.add(data.nombre);
+                    }
+                });
+            }
+            // También agregamos las que ya tengan logo guardado por si acaso
+            Object.keys(LOGOS_ACTUALES).forEach(k => { if(k !== '_default') LOTERIAS_UNICAS.add(k); });
+            
+            renderListaLogos();
+        });
+
+        function renderListaLogos() {
+            const cont = document.getElementById('listaLogos');
+            cont.innerHTML = '';
+            const arrLoterias = Array.from(LOTERIAS_UNICAS).sort();
+
+            if(arrLoterias.length === 0) {
+                cont.innerHTML = '<p style="color:var(--muted);">No se han encontrado loterías en los resultados aún.</p>';
+                return;
+            }
+
+            arrLoterias.forEach(nombre => {
+                const url = LOGOS_ACTUALES[nombre] || '';
+                cont.innerHTML += `
+                    <div class="item">
+                        ${url ? `<img src="${url}" onerror="this.src='https://placehold.co/80x60?text=Error'">` : `<div style="width:80px;height:60px;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#666;">Sin Logo</div>`}
+                        <div class="item-info">
+                            <div class="nombre">${nombre}</div>
+                            <input type="url" id="input_logo_${nombre.replace(/\s+/g, '_')}" value="${url}" placeholder="Pega el link del logo aquí...">
+                        </div>
+                        <button class="btn" onclick="guardarLogo('${nombre.replace(/'/g, "\\'")}')">💾</button>
+                        ${url ? `<button class="btn btn-danger" onclick="eliminarLogo('${nombre.replace(/'/g, "\\'")}')">🗑️</button>` : ''}
+                    </div>
+                `;
+            });
+        }
+
+        function guardarLogo(nombre) {
+            const inputId = `input_logo_${nombre.replace(/\s+/g, '_')}`;
+            const url = document.getElementById(inputId).value.trim();
+            if(!url) return alert('Pega un link válido');
+            
+            database.ref(`web_kiko/logos/${nombre}`).set(url)
+                .then(() => alert(`Logo de ${nombre} guardado`));
+        }
+
+        function eliminarLogo(nombre) {
+            if(confirm(`¿Eliminar logo de ${nombre}?`)) database.ref(`web_kiko/logos/${nombre}`).remove();
+        }
+
+        // --- ANUNCIOS (Lee de anunciosList, la misma de la pizarra) ---
+        function guardarAnuncio() {
+            const url = document.getElementById('anuncioUrl').value.trim();
+            if(!url) return alert('Pega una URL válida');
+            
+            // Guardamos en la misma ruta que usa la pizarra
+            database.ref('anunciosList').push({ url: url, activo: true, tiempo: 15 })
+                .then(() => {
+                    alert('Anuncio guardado');
+                    document.getElementById('anuncioUrl').value = '';
+                });
+        }
+
+        database.ref('anunciosList').on('value', snap => {
+            const cont = document.getElementById('listaAnuncios');
+            cont.innerHTML = '';
+            if(snap.exists()) {
+                snap.forEach(child => {
+                    const id = child.key;
+                    const data = child.val();
+                    if(!data.url) return;
+                    const isVid = data.url.includes('.mp4') || data.url.includes('raw.githubusercontent');
+                    const media = isVid ? `<video src="${data.url}" muted autoplay loop></video>` : `<img src="${data.url}">`;
+                    cont.innerHTML += `
+                        <div class="item">
+                            ${media}
+                            <div class="item-info">
+                                <input type="url" value="${data.url}" readonly>
+                            </div>
+                            <button class="btn btn-danger" onclick="eliminarAnuncio('${id}')">🗑️</button>
+                        </div>
+                    `;
+                });
+            } else {
+                cont.innerHTML = '<p style="color:var(--muted);">No hay anuncios activos.</p>';
+            }
+        });
+
+        function eliminarAnuncio(id) {
+            if(confirm('¿Eliminar anuncio?')) database.ref(`anunciosList/${id}`).remove();
+        }
+    </script>
+</body>
+</html>
