@@ -6,6 +6,9 @@
     <title>Bancas Kiko | La confianza en tu jugada</title>
     <link rel="icon" type="image/png" href="nuevologo.png">
     
+    <!-- ✅ PRECARGA DEL LOGO PRINCIPAL -->
+    <link rel="preload" as="image" href="nuevologo.png">
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -35,7 +38,6 @@
             padding: 10px 5%; max-width: 1400px; margin: 0 auto; gap: 20px;
         }
 
-        /* --- LOGO + TEXTO (MEJORADO) --- */
         .logo-container {
             display: flex; align-items: center; gap: 12px;
             text-decoration: none; cursor: pointer; transition: 0.3s;
@@ -64,7 +66,6 @@
             white-space: nowrap;
         }
 
-        /* --- BOTÓN HAMBURGUESA --- */
         .hamburger { 
             display: none; 
             font-size: 26px; 
@@ -80,7 +81,6 @@
         }
         .hamburger:hover { background: var(--dorado); color: var(--azul-oscuro); transform: scale(1.05); }
 
-        /* --- NAVEGACIÓN DESKTOP --- */
         nav ul { display: flex; list-style: none; gap: 8px; align-items: center; }
         nav a {
             color: var(--blanco); text-decoration: none; font-weight: 600; font-size: 14px;
@@ -95,7 +95,6 @@
         }
         nav a:hover::after { width: 60%; }
 
-        /* Botón especial "Resultados" */
         nav a.nav-highlight {
             background: var(--dorado); color: var(--azul-oscuro);
             font-weight: 800; box-shadow: 0 4px 12px rgba(255,204,0,0.35);
@@ -106,7 +105,6 @@
         }
         nav a.nav-highlight::after { display: none; }
 
-        /* --- MENÚ MÓVIL --- */
         .mobile-nav {
             position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100vh;
             background: linear-gradient(180deg, var(--azul-oscuro) 0%, #00123a 100%);
@@ -266,7 +264,6 @@
         footer { background: #000814; color: #94a3b8; text-align: center; padding: 40px 20px; font-size: 14px; border-top: 5px solid var(--rojo); }
         footer strong { color: var(--dorado); font-size: 18px; }
 
-        /* --- BANNER DE CONEXIÓN --- */
         #connBanner {
             position: fixed; bottom: 20px; right: 20px; z-index: 9999;
             padding: 12px 20px; border-radius: 10px; font-weight: 700;
@@ -276,7 +273,6 @@
         }
         #connBanner.show { opacity: 1; }
 
-        /* --- RESPONSIVE --- */
         @media (max-width: 900px) {
             nav ul { gap: 4px; }
             nav a { padding: 8px 10px; font-size: 13px; }
@@ -307,7 +303,6 @@
 
     <header>
         <div class="header-content">
-            <!-- LOGO + TEXTO MEJORADO -->
             <a href="#inicio" class="logo-container">
                 <img src="nuevologo.png" alt="Bancas Kiko">
                 <div class="logo-text">
@@ -334,7 +329,6 @@
         </div>
     </header>
 
-    <!-- MENÚ MÓVIL -->
     <div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
     <div class="mobile-nav" id="mobileNav">
         <button class="close-menu" onclick="toggleMenu()" aria-label="Cerrar menú">
@@ -358,14 +352,12 @@
         <a href="resultados.html" class="mobile-highlight" onclick="toggleMenu()"><i class="fas fa-trophy"></i>Resultados Completos</a>
     </div>
 
-    <!-- SLIDER ANUNCIOS -->
     <section class="slider-container" id="inicio">
         <div id="sliderAdContainer" style="width:100%; height:100%;">
             <div style="color:var(--dorado); font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; height:100%;">CARGANDO ANUNCIOS...</div>
         </div>
     </section>
 
-    <!-- PRÓXIMOS SORTEOS -->
     <section class="results-section bg-azul" id="proximos">
         <div class="results-header">
             <h2>Próximos Sorteos a Salir</h2>
@@ -374,7 +366,6 @@
         <div class="grid-loterias" id="resultsGridProximos"></div>
     </section>
 
-    <!-- 6 ÚLTIMOS SORTEOS -->
     <section class="results-section bg-gris" id="recientes">
         <div class="results-header">
             <h2>Últimos Resultados</h2>
@@ -387,7 +378,6 @@
         </div>
     </section>
 
-    <!-- ESTADÍSTICAS DE NÚMEROS -->
     <section class="stats-section" id="estadisticas">
         <h2 class="section-title" style="color: white; margin-bottom: 40px;">Estadísticas de Números</h2>
         <p style="color: #94a3b8; margin-bottom: 40px;">Números que más y menos han salido en los últimos resultados</p>
@@ -404,7 +394,6 @@
         </div>
     </section>
 
-    <!-- CÓMO JUGAR Y GANAR -->
     <section class="how-to-play" id="como-jugar">
         <h2 class="section-title">¿Cómo Jugar y Ganar?</h2>
         <p style="color: var(--texto-gris); margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
@@ -489,7 +478,6 @@
         </div>
     </section>
 
-    <!-- PRODUCTOS Y SERVICIOS -->
     <section class="products-section" id="productos">
         <h2 class="section-title">Nuestros Productos y Servicios</h2>
         <p style="color: var(--texto-gris); margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
@@ -518,9 +506,6 @@
         ============================================================ */
         document.getElementById('yearActual').textContent = new Date().getFullYear();
 
-        /* ============================================================
-           UTILIDADES GLOBALES
-        ============================================================ */
         function toggleMenu() {
             document.getElementById('mobileNav').classList.toggle('active');
             document.getElementById('menuOverlay').classList.toggle('active');
@@ -533,23 +518,17 @@
         let proximosSorteesGlobal = [];
         let sliderIntervalId = null;
 
-        /* ============================================================
-           HELPERS DE FECHA (CORREGIDO PARA ZONA HORARIA DE RD)
-        ============================================================ */
         function getFechaStr(offsetDias = 0) {
             const d = new Date();
             d.setDate(d.getDate() + offsetDias);
-            
-            // Usamos getFullYear, getMonth y getDate para obtener la fecha LOCAL
             const año = d.getFullYear();
             const mes = String(d.getMonth() + 1).padStart(2, '0');
             const dia = String(d.getDate()).padStart(2, '0');
-            
             return `${año}-${mes}-${dia}`;
         }
 
         /* ============================================================
-           1. ESTADO DE CONEXIÓN EN TIEMPO REAL
+           ESTADO DE CONEXIÓN
         ============================================================ */
         (function initConnectionBanner() {
             const banner = document.createElement('div');
@@ -572,15 +551,42 @@
         })();
 
         /* ============================================================
-           2. ANUNCIOS EN TIEMPO REAL (slider limpio)
+           ANUNCIOS EN TIEMPO REAL (PRECARGA OPTIMIZADA)
         ============================================================ */
         database.ref('anunciosList').on('value', snap => {
-            slides = [];
+            let anunciosBrutos = [];
             if (snap.exists()) snap.forEach(child => {
                 const data = child.val();
-                if (data.activo !== false && data.url) slides.push(data);
+                if (data.activo !== false && data.url) anunciosBrutos.push(data);
             });
-            initSlider();
+            
+            // ✅ PRECARGAR IMÁGENES ANTES DE AGREGARLAS AL SLIDER
+            let imagenesCargadas = [];
+            let promesas = anunciosBrutos.map(ad => {
+                return new Promise((resolve) => {
+                    const url = ad.url;
+                    // Si es video, lo agregamos directo
+                    if (url.includes('.mp4') || url.includes('raw.githubusercontent')) {
+                        imagenesCargadas.push(ad);
+                        resolve();
+                    } else {
+                        // Si es imagen, la precargamos
+                        const img = new Image();
+                        img.onload = () => { imagenesCargadas.push(ad); resolve(); };
+                        img.onerror = () => { 
+                            console.warn("No se pudo cargar el anuncio:", url); 
+                            resolve(); // Resolvemos para no bloquear los demás
+                        };
+                        img.src = url;
+                    }
+                });
+            });
+
+            // Cuando todas las imágenes se hayan precargado, actualizamos el slider
+            Promise.all(promesas).then(() => {
+                slides = imagenesCargadas;
+                initSlider();
+            });
         });
 
         function initSlider() {
@@ -621,10 +627,21 @@
         }
 
         /* ============================================================
-           3. LOGOS EN TIEMPO REAL
+           LOGOS EN TIEMPO REAL (PRECARGA)
         ============================================================ */
         database.ref('web_kiko/logos').on('value', snap => {
             LOGOS = snap.val() || {};
+            
+            // ✅ PRECARGAR LOS LOGOS EN SEGUNDO PLANO
+            for (const key in LOGOS) {
+                if (key === '_default') continue;
+                const url = LOGOS[key];
+                if (url) {
+                    const img = new Image();
+                    img.src = url;
+                }
+            }
+
             if (TODOS_LOS_RESULTADOS.length > 0) {
                 renderProximos();
                 renderRecientes();
@@ -632,7 +649,7 @@
         });
 
         /* ============================================================
-           4. RESULTADOS EN TIEMPO REAL
+           RESULTADOS EN TIEMPO REAL
         ============================================================ */
         database.ref('sorteos_enloteria/resultados').on('value', snap => {
             TODOS_LOS_RESULTADOS = [];
@@ -648,7 +665,7 @@
         });
 
         /* ============================================================
-           5. PRODUCTOS EN TIEMPO REAL
+           PRODUCTOS EN TIEMPO REAL
         ============================================================ */
         database.ref('web_kiko/productos').on('value', snap => {
             const grid = document.getElementById('productsGrid');
@@ -660,7 +677,7 @@
                     const p = child.val();
                     grid.innerHTML += `
                         <div class="product-card">
-                            <img src="${p.logo || 'https://placehold.co/100x100?text=Logo'}" alt="${p.nombre}">
+                            <img src="${p.logo || 'https://placehold.co/100x100?text=Logo'}" alt="${p.nombre}" loading="lazy">
                             <h3>${p.nombre}</h3>
                             <p>${p.descripcion || 'Servicio disponible en nuestras sucursales.'}</p>
                         </div>
@@ -676,7 +693,7 @@
                 defaultProducts.forEach(p => {
                     grid.innerHTML += `
                         <div class="product-card">
-                            <img src="${p.logo}" alt="${p.nombre}">
+                            <img src="${p.logo}" alt="${p.nombre}" loading="lazy">
                             <h3>${p.nombre}</h3>
                             <p>${p.desc}</p>
                         </div>
@@ -686,7 +703,7 @@
         });
 
         /* ============================================================
-           6. HORA REAL DE LOTERÍA
+           HORA REAL DE LOTERÍA
         ============================================================ */
         function obtenerHoraRealLoteria(nombre, horaOriginal) {
             const hoy = new Date().getDay();
@@ -702,7 +719,7 @@
         }
 
         /* ============================================================
-           7. RENDER PRÓXIMOS
+           RENDER PRÓXIMOS
         ============================================================ */
         function renderProximos() {
             const grid = document.getElementById('resultsGridProximos');
@@ -727,8 +744,6 @@
             });
 
             proximosSorteesGlobal.sort((a, b) => a.infoTiempo.minutosTotales - b.infoTiempo.minutosTotales);
-            
-            // ✅ AHORA MUESTRA LOS PRÓXIMOS 6 SORTEOS
             proximosSorteesGlobal = proximosSorteesGlobal.slice(0, 6);
 
             if (proximosSorteesGlobal.length === 0) {
@@ -746,7 +761,7 @@
 
                 grid.innerHTML += `
                     <div class="card-loteria">
-                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'">` : `<div class="loteria-nombre" style="height:60px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
+                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'" loading="lazy">` : `<div class="loteria-nombre" style="height:60px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
                         <div class="loteria-nombre">${r.nombre}</div>
                         <div class="timer-box" id="timer_${r.nombre.replace(/\s+/g, '')}"><i class="far fa-clock"></i> Calculando...</div>
                         <div class="bolos-container">
@@ -763,7 +778,7 @@
         }
 
         /* ============================================================
-           8. RENDER RECIENTES
+           RENDER RECIENTES
         ============================================================ */
         function renderRecientes() {
             const grid = document.getElementById('resultsGridRecientes');
@@ -785,7 +800,7 @@
 
                 grid.innerHTML += `
                     <div class="card-loteria">
-                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'">` : `<div class="loteria-nombre" style="height:60px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
+                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'" loading="lazy">` : `<div class="loteria-nombre" style="height:60px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
                         <div class="loteria-nombre">${r.nombre}</div>
                         <div class="bolos-container">
                             <div class="bolo ${boloClass}">${nums[0]}</div>
@@ -799,7 +814,7 @@
         }
 
         /* ============================================================
-           9. ESTADÍSTICAS
+           ESTADÍSTICAS
         ============================================================ */
         function calcularEstadisticas() {
             const conteo = {};
@@ -829,7 +844,7 @@
         }
 
         /* ============================================================
-           10. TIMERS
+           TIMERS
         ============================================================ */
         function actualizarTimersEnVivo() {
             proximosSorteesGlobal.forEach(r => {
@@ -885,7 +900,7 @@
         }
 
         /* ============================================================
-           11. HELPER LOGOS
+           HELPER LOGOS
         ============================================================ */
         function getLogo(nombre) {
             if (!nombre) return '';
@@ -899,7 +914,7 @@
         }
 
         /* ============================================================
-           12. LOOPS EN VIVO
+           LOOPS EN VIVO
         ============================================================ */
         setInterval(actualizarTimersEnVivo, 1000);
 
