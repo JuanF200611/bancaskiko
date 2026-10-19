@@ -195,24 +195,31 @@
         .results-header h2 { font-size: 32px; font-weight: 900; color: var(--dorado); text-transform: uppercase; }
         .bg-gris .results-header h2 { color: var(--azul-rey); }
         
-        .grid-loterias { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-        .card-loteria { background: white; border-radius: 20px; padding: 20px; color: var(--texto-oscuro); text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.15); position: relative; overflow: hidden; }
+        .grid-loterias { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; max-width: 1300px; margin: 0 auto; }
+        .card-loteria { background: white; border-radius: 20px; padding: 25px 20px; color: var(--texto-oscuro); text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.15); position: relative; overflow: hidden; }
         .card-loteria::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--dorado); }
-        .card-loteria img { height: 60px; object-fit: contain; margin-bottom: 10px; }
+        .card-loteria img { height: 65px; object-fit: contain; margin-bottom: 10px; }
         .loteria-nombre { font-weight: 800; font-size: 18px; margin-bottom: 5px; color: var(--azul-rey); text-transform: uppercase; }
         
         .timer-box {
             display: inline-flex; align-items: center; gap: 8px; background: #ffe4e6; color: var(--rojo);
-            padding: 8px 15px; border-radius: 20px; font-size: 16px; font-weight: 900; margin-bottom: 15px;
+            padding: 8px 18px; border-radius: 20px; font-size: 16px; font-weight: 900; margin-bottom: 15px;
             font-variant-numeric: tabular-nums;
         }
         
-        .bolos-container { display: flex; justify-content: center; gap: 12px; margin-bottom: 15px; }
-        .bolo { width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 22px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); box-shadow: inset -4px -4px 10px rgba(0,0,0,0.2), inset 3px 3px 8px rgba(255,255,255,0.6), 0 5px 15px rgba(0,0,0,0.2); }
+        /* ✅ BOLOS MÁS GRANDES */
+        .bolos-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .bolo { 
+            width: 70px; height: 70px; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-weight: 900; font-size: 28px; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3); 
+            box-shadow: inset -5px -5px 12px rgba(0,0,0,0.2), inset 4px 4px 10px rgba(255,255,255,0.6), 0 8px 20px rgba(0,0,0,0.25); 
+        }
         .bolo.hoy { background: radial-gradient(circle at 30% 30%, #60a5fa, #1e40af); color: white; }
         .bolo.ayer { background: radial-gradient(circle at 30% 30%, #ffffff, #cbd5e1); color: var(--azul-oscuro); }
 
-        .fecha-tag { display: inline-block; background: var(--gris-fondo); padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: 800; color: var(--texto-gris); text-transform: uppercase; }
+        .fecha-tag { display: inline-block; background: var(--gris-fondo); padding: 6px 18px; border-radius: 20px; font-size: 13px; font-weight: 800; color: var(--texto-gris); text-transform: uppercase; }
 
         .btn-ver-mas { display: inline-flex; align-items: center; gap: 10px; background: var(--dorado); color: var(--azul-oscuro); padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: 900; text-decoration: none; margin-top: 30px; cursor: pointer; border: none; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,204,0,0.4); }
         .btn-ver-mas:hover { background: white; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,204,0,0.6); }
@@ -287,8 +294,10 @@
             .logo-slogan { font-size: 9px; letter-spacing: 1px; }
             .slider-container { height: 250px; margin-top: 78px; }
             .results-header h2, .section-title { font-size: 26px; }
-            .bolo { width: 45px; height: 45px; font-size: 18px; }
+            /* ✅ BOLOS MÁS GRANDES EN MÓVIL TAMBIÉN */
+            .bolo { width: 60px; height: 60px; font-size: 24px; }
             .stats-grid { grid-template-columns: 1fr; }
+            .grid-loterias { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
         }
 
         @media (max-width: 420px) {
@@ -296,6 +305,7 @@
             .logo-slogan { font-size: 8px; }
             .logo-container img { height: 44px; }
             .hamburger { width: 42px; height: 42px; font-size: 22px; }
+            .bolo { width: 55px; height: 55px; font-size: 22px; }
         }
     </style>
 </head>
@@ -501,9 +511,6 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        /* ============================================================
-           ACTUALIZAR AÑO AUTOMÁTICAMENTE
-        ============================================================ */
         document.getElementById('yearActual').textContent = new Date().getFullYear();
 
         function toggleMenu() {
@@ -525,6 +532,34 @@
             const mes = String(d.getMonth() + 1).padStart(2, '0');
             const dia = String(d.getDate()).padStart(2, '0');
             return `${año}-${mes}-${dia}`;
+        }
+
+        /* ============================================================
+           NUEVA FUNCIÓN: GUARDAR IMÁGENES EN CACHÉ DEL NAVEGADOR
+        ============================================================ */
+        async function guardarEnCacheNavegador(url) {
+            if (!('caches' in window)) return url; // Si no soporta caché, devuelve normal
+            try {
+                const cache = await caches.open('kiko-imagenes-v1');
+                const respuestaCache = await cache.match(url);
+                
+                if (respuestaCache) {
+                    // Si ya está en caché, devolvemos el Blob URL (es instantáneo)
+                    const blob = await respuestaCache.blob();
+                    return URL.createObjectURL(blob);
+                } else {
+                    // Si no está, la descargamos y la guardamos
+                    const respuestaRed = await fetch(url, { mode: 'cors' });
+                    if (respuestaRed.ok) {
+                        await cache.put(url, respuestaRed.clone());
+                        const blob = await respuestaRed.blob();
+                        return URL.createObjectURL(blob);
+                    }
+                }
+            } catch (e) {
+                console.warn("Error en caché, usando URL directa:", url);
+            }
+            return url;
         }
 
         /* ============================================================
@@ -551,42 +586,29 @@
         })();
 
         /* ============================================================
-           ANUNCIOS EN TIEMPO REAL (PRECARGA OPTIMIZADA)
+           ANUNCIOS EN TIEMPO REAL (CON CACHÉ)
         ============================================================ */
-        database.ref('anunciosList').on('value', snap => {
+        database.ref('anunciosList').on('value', async snap => {
             let anunciosBrutos = [];
             if (snap.exists()) snap.forEach(child => {
                 const data = child.val();
                 if (data.activo !== false && data.url) anunciosBrutos.push(data);
             });
             
-            // ✅ PRECARGAR IMÁGENES ANTES DE AGREGARLAS AL SLIDER
-            let imagenesCargadas = [];
-            let promesas = anunciosBrutos.map(ad => {
-                return new Promise((resolve) => {
-                    const url = ad.url;
-                    // Si es video, lo agregamos directo
-                    if (url.includes('.mp4') || url.includes('raw.githubusercontent')) {
-                        imagenesCargadas.push(ad);
-                        resolve();
-                    } else {
-                        // Si es imagen, la precargamos
-                        const img = new Image();
-                        img.onload = () => { imagenesCargadas.push(ad); resolve(); };
-                        img.onerror = () => { 
-                            console.warn("No se pudo cargar el anuncio:", url); 
-                            resolve(); // Resolvemos para no bloquear los demás
-                        };
-                        img.src = url;
-                    }
-                });
-            });
+            let anunciosProcesados = [];
+            // Procesar y guardar en caché
+            for (let ad of anunciosBrutos) {
+                const url = ad.url;
+                if (url.includes('.mp4') || url.includes('raw.githubusercontent')) {
+                    anunciosProcesados.push(ad);
+                } else {
+                    const urlCache = await guardarEnCacheNavegador(url);
+                    anunciosProcesados.push({ ...ad, urlCache });
+                }
+            }
 
-            // Cuando todas las imágenes se hayan precargado, actualizamos el slider
-            Promise.all(promesas).then(() => {
-                slides = imagenesCargadas;
-                initSlider();
-            });
+            slides = anunciosProcesados;
+            initSlider();
         });
 
         function initSlider() {
@@ -607,10 +629,12 @@
                 const div = document.createElement('div');
                 div.className = 'slide' + (i === 0 ? ' active' : '');
                 const url = ad.url;
+                const urlFinal = ad.urlCache || url;
+                
                 if (url.includes('.mp4') || url.includes('raw.githubusercontent')) {
-                    div.innerHTML = `<video src="${url}" autoplay muted loop playsinline></video>`;
+                    div.innerHTML = `<video src="${urlFinal}" autoplay muted loop playsinline></video>`;
                 } else {
-                    div.innerHTML = `<img src="${url}" alt="Anuncio">`;
+                    div.innerHTML = `<img src="${urlFinal}" alt="Anuncio">`;
                 }
                 container.appendChild(div);
             });
@@ -627,18 +651,19 @@
         }
 
         /* ============================================================
-           LOGOS EN TIEMPO REAL (PRECARGA)
+           LOGOS EN TIEMPO REAL (CON CACHÉ)
         ============================================================ */
-        database.ref('web_kiko/logos').on('value', snap => {
-            LOGOS = snap.val() || {};
-            
-            // ✅ PRECARGAR LOS LOGOS EN SEGUNDO PLANO
-            for (const key in LOGOS) {
+        database.ref('web_kiko/logos').on('value', async snap => {
+            const logosBrutos = snap.val() || {};
+            LOGOS = {}; // Limpiamos los logos en memoria
+
+            for (const key in logosBrutos) {
                 if (key === '_default') continue;
-                const url = LOGOS[key];
+                const url = logosBrutos[key];
                 if (url) {
-                    const img = new Image();
-                    img.src = url;
+                    // Procesar y guardar en caché
+                    const urlCache = await guardarEnCacheNavegador(url);
+                    LOGOS[key] = urlCache;
                 }
             }
 
@@ -667,22 +692,25 @@
         /* ============================================================
            PRODUCTOS EN TIEMPO REAL
         ============================================================ */
-        database.ref('web_kiko/productos').on('value', snap => {
+        database.ref('web_kiko/productos').on('value', async snap => {
             const grid = document.getElementById('productsGrid');
             if (!grid) return;
             grid.innerHTML = '';
 
             if (snap.exists() && snap.numChildren() > 0) {
-                snap.forEach(child => {
-                    const p = child.val();
+                let productos = [];
+                snap.forEach(child => productos.push(child.val()));
+
+                for (let p of productos) {
+                    const urlFinal = await guardarEnCacheNavegador(p.logo || 'https://placehold.co/100x100?text=Logo');
                     grid.innerHTML += `
                         <div class="product-card">
-                            <img src="${p.logo || 'https://placehold.co/100x100?text=Logo'}" alt="${p.nombre}" loading="lazy">
+                            <img src="${urlFinal}" alt="${p.nombre}" loading="lazy">
                             <h3>${p.nombre}</h3>
                             <p>${p.descripcion || 'Servicio disponible en nuestras sucursales.'}</p>
                         </div>
                     `;
-                });
+                }
             } else {
                 const defaultProducts = [
                     { nombre: 'Venta de Loterías', desc: 'Juega Quinielas, Palés, Tripleta y Super Palé en todas las loterías.', logo: 'https://placehold.co/100x100/0033a0/fff?text=Loterias' },
@@ -690,15 +718,16 @@
                     { nombre: 'Pago de Servicios', desc: 'Paga tu luz, agua, cable e internet sin filas.', logo: 'https://placehold.co/100x100/001f5c/fff?text=Servicios' },
                     { nombre: 'Pago de Facturas', desc: 'Realiza el pago de tus facturas de forma rápida y segura.', logo: 'https://placehold.co/100x100/d90000/fff?text=Facturas' }
                 ];
-                defaultProducts.forEach(p => {
+                for (let p of defaultProducts) {
+                    const urlFinal = await guardarEnCacheNavegador(p.logo);
                     grid.innerHTML += `
                         <div class="product-card">
-                            <img src="${p.logo}" alt="${p.nombre}" loading="lazy">
+                            <img src="${urlFinal}" alt="${p.nombre}" loading="lazy">
                             <h3>${p.nombre}</h3>
                             <p>${p.desc}</p>
                         </div>
                     `;
-                });
+                }
             }
         });
 
@@ -761,7 +790,7 @@
 
                 grid.innerHTML += `
                     <div class="card-loteria">
-                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'" loading="lazy">` : `<div class="loteria-nombre" style="height:60px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
+                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'" loading="lazy">` : `<div class="loteria-nombre" style="height:65px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
                         <div class="loteria-nombre">${r.nombre}</div>
                         <div class="timer-box" id="timer_${r.nombre.replace(/\s+/g, '')}"><i class="far fa-clock"></i> Calculando...</div>
                         <div class="bolos-container">
@@ -800,7 +829,7 @@
 
                 grid.innerHTML += `
                     <div class="card-loteria">
-                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'" loading="lazy">` : `<div class="loteria-nombre" style="height:60px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
+                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'" loading="lazy">` : `<div class="loteria-nombre" style="height:65px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
                         <div class="loteria-nombre">${r.nombre}</div>
                         <div class="bolos-container">
                             <div class="bolo ${boloClass}">${nums[0]}</div>
