@@ -5,14 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados Completos | Bancas Kiko</title>
     <link rel="icon" type="image/png" href="nuevologo.png">
+
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+    <link rel="preconnect" href="https://pizarra-loteria-36ba5-default-rtdb.firebaseio.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    <link rel="preload" as="image" href="nuevologo.png" fetchpriority="high">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
             --azul-rey: #0033a0;
             --azul-oscuro: #001f5c;
             --rojo: #d90000;
             --dorado: #ffcc00;
+            --naranja: #f97316;
             --blanco: #ffffff;
             --gris-fondo: #f4f7f6;
             --texto-oscuro: #1e293b;
@@ -26,11 +38,15 @@
             color: white;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* ============================================================
-           HEADER
-        ============================================================ */
+        /* --- ANIMACIÓN DE NIEVE --- */
+        #snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; display: none; }
+        .snowflake { position: absolute; top: -10px; color: white; opacity: 0.8; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(105vh); } }
+
+        /* --- HEADER --- */
         header {
             background: linear-gradient(90deg, var(--azul-oscuro) 0%, var(--azul-rey) 100%);
             padding: 12px 5%;
@@ -67,61 +83,21 @@
             transform: translateX(-3px);
         }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-        .logo-container img {
-            height: 48px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
-        }
+        .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; z-index: 10; }
+        .logo-container img { height: 60px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); } /* LOGO MAS GRANDE */
         .logo-text { display: flex; flex-direction: column; line-height: 1; }
-        .logo-title {
-            font-size: 18px;
-            font-weight: 900;
-            color: white;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .logo-title { font-size: 20px; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 0.5px; }
         .logo-title span { color: var(--dorado); }
-        .logo-slogan {
-            font-size: 9px;
-            color: #cbd5e1;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            margin-top: 3px;
-        }
+        .logo-slogan { font-size: 9px; color: #cbd5e1; letter-spacing: 1.2px; text-transform: uppercase; margin-top: 3px; }
 
         .header-spacer { width: 150px; }
 
-        /* ============================================================
-           HERO
-        ============================================================ */
-        .hero {
-            padding: 50px 5% 30px;
-            text-align: center;
-        }
-        .hero h1 {
-            font-size: 36px;
-            color: var(--dorado);
-            text-transform: uppercase;
-            font-weight: 900;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
-            text-shadow: 0 3px 10px rgba(0,0,0,0.4);
-        }
-        .hero .subtitle {
-            color: #cbd5e1;
-            font-size: 15px;
-            margin-bottom: 30px;
-        }
+        /* --- HERO --- */
+        .hero { padding: 50px 5% 30px; text-align: center; position: relative; z-index: 10; }
+        .hero h1 { font-size: 36px; color: var(--dorado); text-transform: uppercase; font-weight: 900; margin-bottom: 8px; letter-spacing: 1px; text-shadow: 0 3px 10px rgba(0,0,0,0.4); }
+        .hero .subtitle { color: #cbd5e1; font-size: 15px; margin-bottom: 30px; }
 
-        /* ============================================================
-           CONTROLES DE BÚSQUEDA
-        ============================================================ */
+        /* --- PANEL BÚSQUEDA --- */
         .search-panel {
             background: rgba(255,255,255,0.06);
             backdrop-filter: blur(10px);
@@ -133,290 +109,93 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
-        .date-search {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+        .date-search { display: flex; gap: 10px; margin-bottom: 15px; }
         .date-search input {
-            flex: 1;
-            border: none;
-            padding: 14px 22px;
-            border-radius: 30px;
-            font-size: 15px;
-            font-family: inherit;
-            font-weight: 700;
-            color: var(--azul-rey);
-            outline: none;
-            background: white;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.08);
-            transition: 0.3s;
+            flex: 1; border: none; padding: 14px 22px; border-radius: 30px; font-size: 15px; font-family: inherit; font-weight: 700;
+            color: var(--azul-rey); outline: none; background: white; box-shadow: inset 0 2px 5px rgba(0,0,0,0.08); transition: 0.3s; min-width: 0; cursor: pointer;
         }
-        .date-search input:focus {
-            box-shadow: 0 0 0 3px var(--dorado), inset 0 2px 5px rgba(0,0,0,0.08);
-        }
+        .date-search input:focus { box-shadow: 0 0 0 3px var(--dorado), inset 0 2px 5px rgba(0,0,0,0.08); }
 
-        .btn-search {
-            background: var(--rojo);
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 30px;
-            font-weight: 800;
-            cursor: pointer;
-            font-size: 14px;
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 5px 15px rgba(217,0,0,0.35);
-            white-space: nowrap;
-        }
-        .btn-search:hover {
-            background: #b30000;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(217,0,0,0.5);
-        }
-
-        .quick-chips {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
+        .quick-chips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
         .chip {
-            background: rgba(255,255,255,0.08);
-            color: white;
-            border: 2px solid rgba(255,255,255,0.2);
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            background: rgba(255,255,255,0.08); color: white; border: 2px solid rgba(255,255,255,0.2); padding: 10px 20px;
+            border-radius: 30px; font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 6px;
         }
-        .chip:hover {
-            border-color: var(--dorado);
-            color: var(--dorado);
-            background: rgba(255,204,0,0.08);
-        }
-        .chip.active {
-            background: var(--dorado);
-            border-color: var(--dorado);
-            color: var(--azul-oscuro);
-            box-shadow: 0 5px 15px rgba(255,204,0,0.4);
-        }
+        .chip:hover { border-color: var(--dorado); color: var(--dorado); background: rgba(255,204,0,0.08); }
+        .chip.active { background: var(--dorado); border-color: var(--dorado); color: var(--azul-oscuro); box-shadow: 0 5px 15px rgba(255,204,0,0.4); }
 
-        /* ============================================================
-           FILTROS DE CATEGORÍA
-        ============================================================ */
-        .category-filters {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin: 30px 5% 25px;
-        }
+        /* --- FILTROS CATEGORÍA --- */
+        .category-filters { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 30px 5% 25px; position: relative; z-index: 10; }
         .btn-cat {
-            background: transparent;
-            border: 2px solid rgba(255,255,255,0.25);
-            color: white;
-            padding: 10px 26px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
+            background: transparent; border: 2px solid rgba(255,255,255,0.25); color: white; padding: 10px 26px; border-radius: 30px;
+            font-weight: 700; font-size: 13px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 7px;
         }
-        .btn-cat:hover {
-            border-color: var(--dorado);
-            color: var(--dorado);
-        }
-        .btn-cat.active {
-            background: var(--dorado);
-            border-color: var(--dorado);
-            color: var(--azul-oscuro);
-            box-shadow: 0 5px 15px rgba(255,204,0,0.4);
-        }
+        .btn-cat:hover { border-color: var(--dorado); color: var(--dorado); }
+        .btn-cat.active { background: var(--dorado); border-color: var(--dorado); color: var(--azul-oscuro); box-shadow: 0 5px 15px rgba(255,204,0,0.4); }
+        .btn-cat.anguilla { border-color: rgba(249,115,22,0.5); }
+        .btn-cat.anguilla:hover { border-color: var(--naranja); color: var(--naranja); }
+        .btn-cat.anguilla.active { background: var(--naranja); border-color: var(--naranja); color: white; box-shadow: 0 5px 15px rgba(249,115,22,0.4); }
 
-        /* ============================================================
-           INFO DE RESULTADOS (CONTADOR)
-        ============================================================ */
-        .results-info {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #cbd5e1;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        .results-info strong {
-            color: var(--dorado);
-            font-size: 17px;
-        }
+        /* --- INFO --- */
+        .results-info { text-align: center; margin-bottom: 10px; color: #cbd5e1; font-size: 14px; font-weight: 600; position: relative; z-index: 10; }
+        .results-info strong { color: var(--dorado); font-size: 17px; }
+        .fecha-activa-info { text-align: center; margin-bottom: 25px; color: #94a3b8; font-size: 13px; font-weight: 600; position: relative; z-index: 10; }
+        .fecha-activa-info strong { color: var(--dorado); }
 
-        /* ============================================================
-           GRID DE RESULTADOS
-        ============================================================ */
-        .grid-loterias {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
-            margin: 0 auto 60px;
-            padding: 0 5%;
-        }
+        /* --- GRID --- */
+        .grid-loterias { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto 60px; padding: 0 5%; position: relative; z-index: 10; }
 
         .card-loteria {
-            background: white;
-            border-radius: 20px;
-            padding: 25px 20px;
-            color: var(--texto-oscuro);
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
-            transition: 0.3s;
+            background: white; border-radius: 20px; padding: 25px 20px; color: var(--texto-oscuro); text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2); position: relative; overflow: hidden; transition: 0.3s;
             animation: fadeInUp 0.4s ease both;
         }
-        .card-loteria:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.35);
-        }
-        .card-loteria::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 6px;
-            background: linear-gradient(90deg, var(--dorado), #ffb700);
-        }
+        .card-loteria:hover { transform: translateY(-6px); box-shadow: 0 15px 40px rgba(0,0,0,0.35); }
+        .card-loteria::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: linear-gradient(90deg, var(--dorado), #ffb700); }
+        .card-loteria.anguilla::before { background: linear-gradient(90deg, var(--naranja), #ea580c); }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .card-loteria img { height: 90px; width: 100%; max-width: 220px; object-fit: contain; margin: 0 auto 12px; display: block; padding: 6px; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.15)); }
+        .loteria-nombre { font-weight: 900; font-size: 18px; margin-bottom: 6px; color: var(--azul-rey); text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .card-loteria img {
-            height: 70px;
-            object-fit: contain;
-            margin-bottom: 15px;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.15));
-        }
+        .cat-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; line-height: 1.4; }
+        .cat-badge.dominicana { background: #dbeafe; color: #1e40af; }
+        .cat-badge.extranjera { background: #f3e8ff; color: #7e22ce; }
+        .cat-badge.anguilla { background: #ffedd5; color: #c2410c; }
+        .cat-badge i { font-size: 9px; }
 
-        .loteria-nombre {
-            font-weight: 900;
-            font-size: 18px;
-            margin-bottom: 15px;
-            color: var(--azul-rey);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .bolos-container {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .bolo {
-            width: 62px;
-            height: 62px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 26px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            box-shadow:
-                inset -4px -4px 10px rgba(0,0,0,0.2),
-                inset 3px 3px 8px rgba(255,255,255,0.6),
-                0 5px 15px rgba(0,0,0,0.2);
-        }
+        .bolos-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+        .bolo { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 28px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); box-shadow: inset -5px -5px 12px rgba(0,0,0,0.2), inset 4px 4px 10px rgba(255,255,255,0.6), 0 8px 20px rgba(0,0,0,0.25); }
         .bolo.hoy { background: radial-gradient(circle at 30% 30%, #60a5fa, #1e40af); color: white; }
         .bolo.ayer { background: radial-gradient(circle at 30% 30%, #ffffff, #cbd5e1); color: var(--azul-oscuro); }
 
-        .fecha-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: var(--gris-fondo);
-            padding: 7px 18px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 800;
-            color: var(--texto-gris);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+        .bolo-wrapper { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .bolo-label { font-size: 11px; font-weight: 800; color: var(--texto-gris); text-transform: uppercase; letter-spacing: 0.5px; background: #e2e8f0; padding: 2px 8px; border-radius: 8px; }
+        .fecha-tag { display: inline-flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px; background: var(--gris-fondo); padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; color: var(--texto-gris); text-transform: uppercase; max-width: 100%; box-sizing: border-box; white-space: normal; text-align: center; line-height: 1.3; }
 
-        /* ============================================================
-           ESTADO VACÍO
-        ============================================================ */
-        .empty-state {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
-        }
-        .empty-state i {
-            font-size: 70px;
-            color: rgba(255,204,0,0.5);
-            margin-bottom: 20px;
-            display: block;
-        }
-        .empty-state h3 {
-            color: white;
-            font-size: 22px;
-            margin-bottom: 10px;
-        }
-        .empty-state p {
-            color: #94a3b8;
-            font-size: 15px;
-        }
+        /* --- VACÍO --- */
+        .empty-state { grid-column: 1 / -1; text-align: center; padding: 60px 20px; }
+        .empty-state i { font-size: 70px; color: rgba(255,204,0,0.5); margin-bottom: 20px; display: block; }
+        .empty-state h3 { color: white; font-size: 22px; margin-bottom: 10px; }
+        .empty-state p { color: #94a3b8; font-size: 15px; }
 
-        /* ============================================================
-           SKELETON LOADING
-        ============================================================ */
-        .skeleton-card {
-            background: rgba(255,255,255,0.08);
-            border-radius: 20px;
-            height: 260px;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
+        /* --- SKELETON --- */
+        .skeleton-card { background: rgba(255,255,255,0.08); border-radius: 20px; height: 260px; animation: pulse 1.5s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
-        /* ============================================================
-           FOOTER
-        ============================================================ */
-        footer {
-            background: #000814;
-            color: #94a3b8;
-            text-align: center;
-            padding: 30px 20px;
-            font-size: 13px;
-            border-top: 4px solid var(--rojo);
-        }
+        /* --- FOOTER --- */
+        footer { background: #000814; color: #94a3b8; text-align: center; padding: 30px 20px; font-size: 13px; border-top: 4px solid var(--rojo); position: relative; z-index: 10; }
         footer strong { color: var(--dorado); font-size: 15px; }
 
-        /* ============================================================
-           RESPONSIVE
-        ============================================================ */
+        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             header { padding: 10px 4%; }
             .btn-back { font-size: 12px; padding: 8px 14px; }
             .btn-back span { display: none; }
             .btn-back i { font-size: 16px; }
-            .logo-title { font-size: 14px; }
+            .logo-title { font-size: 16px; }
             .logo-slogan { font-size: 8px; }
-            .logo-container img { height: 40px; }
+            .logo-container img { height: 45px; }
             .header-spacer { display: none; }
 
             .hero { padding: 30px 5% 20px; }
@@ -424,35 +203,36 @@
             .hero .subtitle { font-size: 13px; }
 
             .search-panel { padding: 15px; }
-            .date-search { flex-direction: column; }
-            .date-search input, .btn-search { width: 100%; justify-content: center; }
+            .date-search input { width: 100%; }
 
             .quick-chips { gap: 8px; }
-            .chip { padding: 8px 16px; font-size: 12px; }
+            .chip { padding: 8px 14px; font-size: 12px; }
 
             .category-filters { margin: 20px 5%; gap: 8px; }
             .btn-cat { padding: 8px 18px; font-size: 12px; }
 
-            .grid-loterias {
-                grid-template-columns: 1fr;
-                gap: 18px;
-                padding: 0 4%;
-            }
-            .bolo { width: 55px; height: 55px; font-size: 22px; }
+            .grid-loterias { grid-template-columns: 1fr; gap: 18px; padding: 0 4%; }
+            .bolo { width: 60px; height: 60px; font-size: 24px; }
             .card-loteria { padding: 20px 15px; }
+            .card-loteria img { height: 75px; max-width: 180px; }
+            .fecha-tag { font-size: 11px; padding: 5px 12px; }
         }
 
         @media (max-width: 420px) {
-            .logo-title { font-size: 12px; }
-            .logo-container img { height: 34px; }
-            .bolo { width: 50px; height: 50px; font-size: 20px; }
+            .logo-title { font-size: 14px; }
+            .logo-container img { height: 40px; }
+            .bolo { width: 55px; height: 55px; font-size: 22px; }
+            .bolo-label { font-size: 10px; padding: 2px 6px; }
             .hero h1 { font-size: 20px; }
+            .fecha-tag { font-size: 10px; padding: 4px 10px; width: 100%; border-radius: 12px; }
+            .card-loteria { padding: 18px 12px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
+    <div id="snow-container"></div>
+
     <header>
         <a href="index.html" class="btn-back">
             <i class="fas fa-arrow-left"></i>
@@ -460,7 +240,7 @@
         </a>
 
         <a href="index.html" class="logo-container">
-            <img src="nuevologo.png" alt="Bancas Kiko">
+            <img id="mainLogo" src="nuevologo.png" alt="Bancas Kiko" width="60" height="60">
             <div class="logo-text">
                 <div class="logo-title">Bancas <span>Kiko</span></div>
                 <div class="logo-slogan">La confianza en tu jugada</div>
@@ -470,17 +250,13 @@
         <div class="header-spacer"></div>
     </header>
 
-    <!-- HERO + BÚSQUEDA -->
     <div class="hero">
         <h1>Todos los Resultados</h1>
         <p class="subtitle">Consulta los sorteos por fecha y categoría</p>
 
         <div class="search-panel">
             <div class="date-search">
-                <input type="date" id="searchDate">
-                <button class="btn-search" onclick="buscarPorFecha()">
-                    <i class="fas fa-search"></i> Buscar
-                </button>
+                <input type="date" id="searchDate" aria-label="Buscar por fecha" onchange="buscarPorFecha()">
             </div>
             <div class="quick-chips">
                 <button class="chip active" id="chipHoy" onclick="verHoy()">
@@ -492,11 +268,13 @@
                 <button class="chip" id="chipAnteayer" onclick="verAnteayer()">
                     <i class="fas fa-calendar-alt"></i> Anteayer
                 </button>
+                <button class="chip" id="chipLimpiar" onclick="limpiarFecha()" title="Volver a hoy" style="border-color: rgba(217,0,0,0.5);">
+                    <i class="fas fa-times"></i> Limpiar
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- FILTROS DE CATEGORÍA -->
     <div class="category-filters" id="filtrosCategoria">
         <button class="btn-cat active" data-cat="todas" onclick="filtrarCategoria('todas', this)">
             <i class="fas fa-list"></i> Todas
@@ -507,19 +285,20 @@
         <button class="btn-cat" data-cat="extranjera" onclick="filtrarCategoria('extranjera', this)">
             <i class="fas fa-globe"></i> Extranjeras
         </button>
+        <button class="btn-cat anguilla" data-cat="anguilla" onclick="filtrarCategoria('anguilla', this)">
+            <i class="fas fa-dragon"></i> Anguilla
+        </button>
     </div>
 
-    <!-- INFO CONTADOR -->
     <div class="results-info" id="resultsInfo"></div>
+    <div class="fecha-activa-info" id="fechaActivaInfo"></div>
 
-    <!-- GRID -->
     <div class="grid-loterias" id="resultsGrid">
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
         <div class="skeleton-card"></div>
     </div>
 
-    <!-- FOOTER -->
     <footer>
         <p>&copy; <span id="yearActual"></span> <strong>Bancas Kiko</strong> · Todos los derechos reservados</p>
         <p style="margin-top: 6px; font-size: 11px; color: #64748b;">La confianza en tu jugada · Prohibido para menores de edad</p>
@@ -528,9 +307,6 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script>
-        /* ============================================================
-           CONFIGURACIÓN FIREBASE
-        ============================================================ */
         const firebaseConfig = { databaseURL: "https://pizarra-loteria-36ba5-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
@@ -541,166 +317,282 @@
         let categoriaActiva = 'todas';
         let fechaActiva = '';
 
-        /* ============================================================
-           ACTUALIZAR AÑO AUTOMÁTICAMENTE
-        ============================================================ */
         document.getElementById('yearActual').textContent = new Date().getFullYear();
 
-        /* ============================================================
-           HELPERS DE FECHA (CORREGIDO PARA ZONA HORARIA DE RD)
-        ============================================================ */
-        function getFechaStr(offsetDias = 0) {
-            const d = new Date();
-            d.setDate(d.getDate() + offsetDias);
+        // --- LÓGICA DE MODO NAVIDAD (LOGO Y NIEVE) ---
+        database.ref('web_kiko/modo_navidad').on('value', snap => {
+            const modoNavidad = snap.val() === true;
+            const mainLogo = document.getElementById('mainLogo');
+            const snowContainer = document.getElementById('snow-container');
             
-            // Usamos getFullYear, getMonth y getDate para obtener la fecha LOCAL
-            // Evitamos toISOString() para que no convierta a UTC y nos reste horas.
-            const año = d.getFullYear();
-            const mes = String(d.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
-            const dia = String(d.getDate()).padStart(2, '0');
-            
-            return `${año}-${mes}-${dia}`;
+            if (modoNavidad) {
+                mainLogo.src = "nuevologo.png";
+                snowContainer.style.display = 'block';
+                iniciarNieve();
+            } else {
+                mainLogo.src = "nuevolovo2.png";
+                snowContainer.style.display = 'none';
+                snowContainer.innerHTML = '';
+            }
+        });
+
+        function iniciarNieve() {
+            const container = document.getElementById('snow-container');
+            if(container.innerHTML !== '') return;
+            const copos = ['❅', '❆', '❄', '•'];
+            for (let i = 0; i < 40; i++) {
+                const copo = document.createElement('div');
+                copo.className = 'snowflake';
+                copo.innerText = copos[Math.floor(Math.random() * copos.length)];
+                copo.style.left = Math.random() * 100 + 'vw';
+                copo.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                copo.style.animationDelay = Math.random() * 5 + 's';
+                copo.style.opacity = Math.random() * 0.5 + 0.3;
+                copo.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                container.appendChild(copo);
+            }
         }
 
-        /* ============================================================
-           CARGA DE DATOS EN TIEMPO REAL
-        ============================================================ */
-        database.ref('web_kiko/logos').on('value', snap => {
-            LOGOS = snap.val() || {};
+        function normalizar(str) {
+            return String(str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+        }
+
+        function getFechaStr(offsetDias = 0) {
+            const d = new Date(); d.setDate(d.getDate() + offsetDias);
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+
+        function esDomingo(fechaRD) {
+            if (fechaRD) { const [y, m, d] = String(fechaRD).split('-').map(Number); return new Date(y, m - 1, d).getDay() === 0; }
+            return new Date().getDay() === 0;
+        }
+
+        function formatearFechaBonita(fechaStr) {
+            if (!fechaStr) return '';
+            const [y, m, d] = fechaStr.split('-').map(Number);
+            const meses = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+            return `${d} de ${meses[m - 1]} de ${y}`;
+        }
+
+        function formatearFechaCorta(fechaStr, esHoy) {
+            if (esHoy) return 'HOY';
+            if (!fechaStr) return 'AYER';
+            const isoMatch = String(fechaStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (isoMatch) {
+                const meses = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+                return `${parseInt(isoMatch[3], 10)} ${meses[parseInt(isoMatch[2], 10) - 1]}`;
+            }
+            return fechaStr;
+        }
+
+        function getFechaRD(r) {
+            if (r.fechaRD) return r.fechaRD;
+            if (r.fecha) { const m = String(r.fecha).match(/^(\d{4})-(\d{2})-(\d{2})/); if (m) return m[1] + '-' + m[2] + '-' + m[3]; }
+            return '';
+        }
+
+        const RENOMBRES = {
+            'la suerte': 'La Suerte 12:30pm', 'la suerte 12:30': 'La Suerte 12:30pm', 'la suerte 12:30pm': 'La Suerte 12:30pm',
+            'king lottery dia': 'King Lottery Día', 'king lottery día': 'King Lottery Día', 'king lottery': 'King Lottery Día',
+            'real': 'Real Día', 'real dia': 'Real Día', 'real día': 'Real Día',
+            'la primera': 'La Primera Día', 'la primera dia': 'La Primera Día', 'la primera día': 'La Primera Día',
+            'lotedom': 'LoteDom Día', 'lotedom dia': 'LoteDom Día', 'lotedom día': 'LoteDom Día',
+            'leidsa': 'Leidsa Quiniela Palé', 'leidsa quiniela pale': 'Leidsa Quiniela Palé', 'leidsa quiniela palé': 'Leidsa Quiniela Palé', 'leidsa pale': 'Leidsa Quiniela Palé', 'leidsa palé': 'Leidsa Quiniela Palé'
+        };
+
+        function aplicarRenombre(nombre, horaOriginal, fechaRD) {
+            if (!nombre) return nombre;
+            const key = normalizar(nombre);
+            const domingo = esDomingo(fechaRD);
+            if (domingo && key.includes('la suerte') && String(horaOriginal || '').toUpperCase().includes('6:00')) return 'La Suerte 9PM';
+            return RENOMBRES[key] || nombre;
+        }
+
+        function obtenerHoraRealLoteria(nombre, horaOriginal, fechaRD) {
+            const n = normalizar(nombre);
+            const domingo = esDomingo(fechaRD);
+            if (domingo && n.includes('la suerte') && String(horaOriginal).toUpperCase().includes('6:00')) return '09:00PM';
+            if (domingo && n.includes('nacional') && n.includes('noche')) return '06:00PM';
+            if (n.includes('leidsa') && String(horaOriginal).includes('4:00')) { if (!domingo) return null; }
+            return horaOriginal;
+        }
+
+        function getCategoriaLoteria(nombreOriginal, categoriaFirebase) {
+            const key = normalizar(nombreOriginal);
+            if (key.includes('anguilla') || key.includes('anguilas')) return 'anguilla';
+            if (categoriaFirebase && String(categoriaFirebase).trim() !== '') {
+                const c = normalizar(categoriaFirebase);
+                if (c.includes('anguill')) return 'anguilla';
+                if (c.includes('extranj')) return 'extranjera';
+                if (c.includes('dominican')) return 'dominicana';
+            }
+            if (key.includes('king lottery') || key.includes('florida') || key.includes('loteka')) return 'extranjera';
+            return 'dominicana';
+        }
+
+        function categoriaCoincideConFiltro(categoriaReal, filtro) {
+            if (filtro === 'todas') return true;
+            if (filtro === 'extranjera') return categoriaReal === 'extranjera' || categoriaReal === 'anguilla';
+            return categoriaReal === filtro;
+        }
+
+        function renderCatBadge(categoria) {
+            if (categoria === 'anguilla') return `<div class="cat-badge anguilla"><i class="fas fa-dragon"></i> Anguilla</div>`;
+            if (categoria === 'extranjera') return `<div class="cat-badge extranjera"><i class="fas fa-globe"></i> Extranjera</div>`;
+            return `<div class="cat-badge dominicana"><i class="fas fa-flag"></i> Dominicana</div>`;
+        }
+
+        const CACHE_NAME = 'kiko-imagenes-v3';
+        const memoriaBlobs = new Map();
+        const promesasEnCurso = new Map();
+        const PLACEHOLDER_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='90'><rect width='100%25' height='100%25' fill='%23e2e8f0' rx='8'/></svg>";
+
+        async function guardarEnCacheNavegador(url) {
+            if (!url) return PLACEHOLDER_SVG;
+            if (memoriaBlobs.has(url)) return memoriaBlobs.get(url);
+            if (promesasEnCurso.has(url)) return promesasEnCurso.get(url);
+            const promesa = (async () => {
+                try {
+                    if (!('caches' in window)) { memoriaBlobs.set(url, url); return url; }
+                    const cache = await caches.open(CACHE_NAME);
+                    let respuesta = await cache.match(url);
+                    if (!respuesta) {
+                        respuesta = await fetch(url, { mode: 'cors', cache: 'force-cache', priority: 'high' });
+                        if (!respuesta.ok) throw new Error('Fetch failed: ' + respuesta.status);
+                        cache.put(url, respuesta.clone()).catch(() => {});
+                    }
+                    const blob = await respuesta.blob();
+                    const objectUrl = URL.createObjectURL(blob);
+                    memoriaBlobs.set(url, objectUrl);
+                    return objectUrl;
+                } catch (e) { return url; } finally { promesasEnCurso.delete(url); }
+            })();
+            promesasEnCurso.set(url, promesa);
+            return promesa;
+        }
+
+        (async () => {
+            try {
+                if (!('caches' in window)) return;
+                const keys = await caches.keys();
+                await Promise.all(keys.filter(k => k.startsWith('kiko-imagenes-') && k !== CACHE_NAME).map(k => caches.delete(k)));
+            } catch (e) {}
+        })();
+
+        database.ref('web_kiko/logos').on('value', async snap => {
+            const logosBrutos = snap.val() || {};
+            const entradas = Object.entries(logosBrutos).filter(([k, v]) => k !== '_default' && v);
+            const resultados = await Promise.all(entradas.map(async ([key, url]) => [key, await guardarEnCacheNavegador(url)]));
+            LOGOS = Object.fromEntries(resultados);
+            if (logosBrutos._default) { LOGOS._default = await guardarEnCacheNavegador(logosBrutos._default); }
             renderResultados(getResultadosFiltrados());
         });
 
         database.ref('sorteos_enloteria/resultados').on('value', snap => {
             TODOS_LOS_RESULTADOS = [];
-            if (snap.exists()) snap.forEach(child => {
-                const data = child.val();
-                if (data) TODOS_LOS_RESULTADOS.push(data);
-            });
+            if (snap.exists()) snap.forEach(child => { const data = child.val(); if (data) TODOS_LOS_RESULTADOS.push(data); });
             TODOS_LOS_RESULTADOS.sort((a, b) => new Date(b.enviadoEn) - new Date(a.enviadoEn));
-
-            // Si aún no se ha seleccionado fecha, cargar "hoy" por defecto
-            if (!fechaActiva) {
-                verHoy();
-            } else {
-                // Refrescar con la fecha que ya estaba activa
-                resultadosFiltradosGlobal = TODOS_LOS_RESULTADOS.filter(r => r.fechaRD === fechaActiva);
+            if (!fechaActiva) { verHoy(); } else {
+                resultadosFiltradosGlobal = TODOS_LOS_RESULTADOS.filter(r => getFechaRD(r) === fechaActiva);
                 renderResultados(getResultadosFiltrados());
             }
         });
 
-        /* ============================================================
-           NAVEGACIÓN DE FECHAS
-        ============================================================ */
         function setFecha(fechaStr, chipId) {
             fechaActiva = fechaStr;
             document.getElementById('searchDate').value = fechaStr;
-            resultadosFiltradosGlobal = TODOS_LOS_RESULTADOS.filter(r => r.fechaRD === fechaStr);
-
-            // Actualizar chips activos
+            resultadosFiltradosGlobal = TODOS_LOS_RESULTADOS.filter(r => getFechaRD(r) === fechaStr);
             document.querySelectorAll('.quick-chips .chip').forEach(c => c.classList.remove('active'));
-            if (chipId) document.getElementById(chipId).classList.add('active');
-
+            if (chipId) { const chip = document.getElementById(chipId); if (chip) chip.classList.add('active'); }
             renderResultados(getResultadosFiltrados());
         }
 
-        function verHoy() {
-            setFecha(getFechaStr(0), 'chipHoy');
-        }
-
-        function verAyer() {
-            setFecha(getFechaStr(-1), 'chipAyer');
-        }
-
-        function verAnteayer() {
-            setFecha(getFechaStr(-2), 'chipAnteayer');
-        }
+        function verHoy() { setFecha(getFechaStr(0), 'chipHoy'); }
+        function verAyer() { setFecha(getFechaStr(-1), 'chipAyer'); }
+        function verAnteayer() { setFecha(getFechaStr(-2), 'chipAnteayer'); }
+        function limpiarFecha() { document.getElementById('searchDate').value = ''; verHoy(); }
 
         function buscarPorFecha() {
-            const inputDate = document.getElementById('searchDate').value;
-            if (!inputDate) return alert('Selecciona una fecha');
+            const input = document.getElementById('searchDate');
+            const inputDate = input.value;
+            if (!inputDate) { verHoy(); return; }
+            const hoyStr = getFechaStr(0);
+            if (inputDate > hoyStr) { alert('No puedes buscar fechas futuras.'); input.value = fechaActiva || hoyStr; return; }
+            const limiteStr = getFechaStr(-90);
+            if (inputDate < limiteStr) { if (!confirm(`La fecha ${formatearFechaBonita(inputDate)} es muy antigua. ¿Continuar?`)) { input.value = fechaActiva || hoyStr; return; } }
+            document.querySelectorAll('.quick-chips .chip').forEach(c => c.classList.remove('active'));
+            if (inputDate === getFechaStr(0)) document.getElementById('chipHoy').classList.add('active');
+            else if (inputDate === getFechaStr(-1)) document.getElementById('chipAyer').classList.add('active');
+            else if (inputDate === getFechaStr(-2)) document.getElementById('chipAnteayer').classList.add('active');
             setFecha(inputDate, null);
         }
 
-        /* ============================================================
-           FILTROS DE CATEGORÍA
-        ============================================================ */
         function filtrarCategoria(cat, btn) {
             categoriaActiva = cat;
-
             document.querySelectorAll('.btn-cat').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-
             renderResultados(getResultadosFiltrados());
         }
 
         function getResultadosFiltrados() {
             if (categoriaActiva === 'todas') return resultadosFiltradosGlobal;
-
-            return resultadosFiltradosGlobal.filter(r => {
-                const c = (r.categoria || '').toLowerCase();
-                return c.includes(categoriaActiva);
-            });
+            return resultadosFiltradosGlobal.filter(r => { const catReal = getCategoriaLoteria(r.nombre, r.categoria); return categoriaCoincideConFiltro(catReal, categoriaActiva); });
         }
 
-        /* ============================================================
-           RENDER
-        ============================================================ */
         function renderResultados(dataArray) {
             const grid = document.getElementById('resultsGrid');
             const info = document.getElementById('resultsInfo');
-            const hoyStr = getFechaStr(0); // Ahora devuelve la fecha real de RD
+            const fechaInfo = document.getElementById('fechaActivaInfo');
+            const hoyStr = getFechaStr(0);
+
+            if (fechaActiva) {
+                const esHoy = fechaActiva === hoyStr;
+                const etiqueta = esHoy ? 'HOY' : formatearFechaBonita(fechaActiva);
+                fechaInfo.innerHTML = `<i class="far fa-calendar"></i> Mostrando: <strong>${etiqueta}</strong>`;
+            } else { fechaInfo.innerHTML = ''; }
 
             if (dataArray.length === 0) {
-                grid.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-inbox"></i>
-                        <h3>Sin resultados</h3>
-                        <p>No hay sorteos para la fecha o categoría seleccionada.</p>
-                    </div>
-                `;
-                info.innerHTML = '';
-                return;
+                const msgCat = categoriaActiva === 'anguilla' ? 'anguillas' : (categoriaActiva === 'extranjera' ? 'extranjeras' : (categoriaActiva === 'dominicana' ? 'dominicanas' : 'sorteos'));
+                grid.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><h3>Sin resultados</h3><p>No hay ${msgCat} para la fecha seleccionada.</p>${fechaActiva ? `<p style="margin-top: 10px; color: #64748b; font-size: 13px;">Fecha: ${formatearFechaBonita(fechaActiva)}</p>` : ''}</div>`;
+                info.innerHTML = ''; return;
             }
 
             info.innerHTML = `Mostrando <strong>${dataArray.length}</strong> resultado${dataArray.length !== 1 ? 's' : ''}`;
-
             grid.innerHTML = '';
             dataArray.forEach((r, i) => {
+                const fechaResultado = r.fechaRD || fechaActiva || hoyStr;
+                const nombreMostrar = aplicarRenombre(r.nombre, r.hora, fechaResultado);
+                const horaMostrar = obtenerHoraRealLoteria(r.nombre, r.hora, fechaResultado) || r.hora || '';
+                const categoria = getCategoriaLoteria(r.nombre, r.categoria);
                 const logoUrl = getLogo(r.nombre);
                 const nums = r.numeros || ['--','--','--'];
-                const esHoy = r.fechaRD === hoyStr;
+                const esHoy = getFechaRD(r) === hoyStr;
                 const boloClass = esHoy ? 'hoy' : 'ayer';
-
+                const fechaCorta = formatearFechaCorta(r.fecha, esHoy);
+                const claseAnguilla = categoria === 'anguilla' ? 'anguilla' : '';
                 grid.innerHTML += `
-                    <div class="card-loteria" style="animation-delay: ${i * 40}ms;">
-                        ${logoUrl
-                            ? `<img src="${logoUrl}" onerror="this.style.display='none'">`
-                            : `<div class="loteria-nombre" style="height:70px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
-                        <div class="loteria-nombre">${r.nombre}</div>
+                    <div class="card-loteria ${claseAnguilla}" style="animation-delay: ${Math.min(i * 40, 400)}ms;">
+                        ${logoUrl ? `<img src="${logoUrl}" loading="lazy" decoding="async" width="220" height="90" onerror="this.style.display='none'">` : `<div class="loteria-nombre" style="height:90px; display:flex; align-items:center; justify-content:center;">${nombreMostrar}</div>`}
+                        <div class="loteria-nombre">${nombreMostrar}</div>
+                        ${renderCatBadge(categoria)}
                         <div class="bolos-container">
-                            <div class="bolo ${boloClass}">${nums[0]}</div>
-                            <div class="bolo ${boloClass}">${nums[1]}</div>
-                            <div class="bolo ${boloClass}">${nums[2]}</div>
+                            <div class="bolo-wrapper"><div class="bolo ${boloClass}">${nums[0]}</div><div class="bolo-label">1ra</div></div>
+                            <div class="bolo-wrapper"><div class="bolo ${boloClass}">${nums[1]}</div><div class="bolo-label">2da</div></div>
+                            <div class="bolo-wrapper"><div class="bolo ${boloClass}">${nums[2]}</div><div class="bolo-label">3ra</div></div>
                         </div>
-                        <div class="fecha-tag">
-                            <i class="far fa-calendar"></i>
-                            ${esHoy ? 'HOY' : (r.fecha || 'DÍA ANT.')} · ${r.hora || ''}
-                        </div>
+                        <div class="fecha-tag"><i class="far fa-calendar"></i> ${fechaCorta} · ${horaMostrar}</div>
                     </div>
                 `;
             });
         }
 
-        /* ============================================================
-           LOGOS HELPER
-        ============================================================ */
         function getLogo(nombre) {
-            if (!nombre) return '';
-            if (LOGOS[nombre]) return LOGOS[nombre];
-            const n = nombre.toLowerCase();
+            if (!nombre) return ''; if (LOGOS[nombre]) return LOGOS[nombre];
+            const n = normalizar(nombre);
             for (const [k, v] of Object.entries(LOGOS)) {
                 if (k === '_default') continue;
-                if (n.includes(k.toLowerCase()) || k.toLowerCase().includes(n)) return v;
+                const nk = normalizar(k);
+                if (n.includes(nk) || nk.includes(n)) return v;
             }
             return LOGOS['_default'] || '';
         }
