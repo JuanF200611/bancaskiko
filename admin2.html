@@ -5,50 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Web | Bancas Kiko</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --bg: #001f5c; --card: #0033a0; --border: #1e3a8a;
-            --primary: #ffcc00; --text: #ffffff; --muted: #93c5fd;
-            --rojo: #d90000;
-        }
+        :root { --bg: #001f5c; --card: #0033a0; --border: #1e3a8a; --primary: #ffcc00; --text: #ffffff; --muted: #93c5fd; --rojo: #d90000; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: var(--bg); color: var(--text); padding: 20px; }
-        .dashboard { max-width: 1000px; margin: 0 auto; }
+        .dashboard { max-width: 1100px; margin: 0 auto; }
         
         header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--border); padding-bottom: 20px; }
         header h1 { font-size: 24px; color: var(--primary); }
 
         .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .tab-btn {
-            padding: 12px 24px; background: var(--card); border: 1px solid var(--border);
-            color: var(--text); border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s;
-        }
+        .tab-btn { padding: 12px 24px; background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.2s; }
         .tab-btn.active { background: var(--primary); color: var(--bg); border-color: var(--primary); }
-
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
         .card { background: var(--card); padding: 25px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border); }
         .card h2 { font-size: 18px; margin-bottom: 15px; border-left: 4px solid var(--primary); padding-left: 10px; color: var(--primary); }
 
-        input[type="text"], input[type="url"] {
-            width: 100%; padding: 15px; background: var(--bg); border: 1px solid var(--border);
-            color: white; border-radius: 8px; margin-bottom: 10px; font-family: inherit;
-        }
-        input:focus { outline: 2px solid var(--primary); }
-        
-        .btn {
-            padding: 12px 24px; border: none; border-radius: 8px; font-weight: 800;
-            cursor: pointer; color: var(--bg); transition: 0.2s; background: var(--primary);
-        }
+        input[type="text"], input[type="url"], input[type="date"], input[type="number"] { width: 100%; padding: 12px; background: var(--bg); border: 1px solid var(--border); color: white; border-radius: 8px; margin-bottom: 10px; font-family: inherit; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; color: var(--bg); transition: 0.2s; background: var(--primary); }
         .btn:hover { filter: brightness(1.1); }
         .btn-danger { background: var(--rojo); color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
 
-        .item-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        .item {
-            display: flex; gap: 15px; align-items: center; background: rgba(0,0,0,0.2);
-            padding: 15px; border-radius: 8px; border: 1px solid var(--border);
+        /* --- DISEÑO DEL BOTÓN DEL CLIENTE --- */
+        .cliente-wrapper { margin-bottom: 15px; }
+        .cliente-btn {
+            width: 100%; display: flex; justify-content: space-between; align-items: center;
+            background: linear-gradient(90deg, #0033a0, #001f5c); border: 2px solid var(--border);
+            padding: 20px; border-radius: 12px; cursor: pointer; transition: 0.3s; color: white;
+            text-align: left; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
+        .cliente-btn:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .cliente-datos { display: flex; flex-direction: column; gap: 5px; }
+        .cliente-nombre { font-size: 18px; font-weight: 800; color: var(--primary); }
+        .cliente-telefono { font-size: 14px; color: var(--muted); }
+        .cliente-badge { background: var(--primary); color: var(--bg); padding: 8px 16px; border-radius: 30px; font-weight: 900; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+
+        /* --- PANEL DESPLEGABLE CON TABLA --- */
+        .tickets-panel { display: none; margin-top: 10px; padding: 20px; background: rgba(0,0,0,0.3); border-radius: 12px; border: 1px solid var(--border); border-top: none; border-top-left-radius: 0; border-top-right-radius: 0; }
+        .tickets-panel.active { display: block; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tabla-interna { width: 100%; border-collapse: collapse; background: white; color: black; border-radius: 8px; overflow: hidden; }
+        .tabla-interna th { background: #f4f7f6; padding: 12px; text-align: left; font-size: 12px; color: #64748b; border-bottom: 2px solid #e2e8f0; }
+        .tabla-interna td { padding: 12px; font-size: 13px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
+        .tabla-interna tr:last-child td { border-bottom: none; }
+        .monto-tag { color: #16a34a; font-weight: 900; font-size: 14px; }
+        .fecha-reg-tag { font-size: 11px; color: #64748b; }
+
+        /* Switch de Activación */
+        .switch-container { display: flex; align-items: center; gap: 15px; margin-top: 15px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
+        .switch { position: relative; display: inline-block; width: 60px; height: 34px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: #16a34a; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .switch-label { font-size: 16px; font-weight: 800; color: var(--primary); }
+
+        /* Formulario Manual */
+        .form-manual { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .form-manual .full { grid-column: 1 / -1; }
+
+        /* Logos y Anuncios */
+        .item-list { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .item { display: flex; gap: 15px; align-items: center; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; border: 1px solid var(--border); }
         .item img, .item video { width: 80px; height: 60px; object-fit: contain; background: #000; border-radius: 8px; }
         .item-info { flex: 1; overflow: hidden; }
         .item-info .nombre { font-weight: 800; color: var(--primary); font-size: 18px; margin-bottom: 4px;}
@@ -64,39 +88,98 @@
         </header>
 
         <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('logos')">🖼️ Lista de Loterías (Logos)</button>
-            <button class="tab-btn" onclick="switchTab('anuncios')">📢 Anuncios Web</button>
+            <button class="tab-btn active" onclick="switchTab('promocion')">🎄 Promociones Navidad</button>
+            <button class="tab-btn" onclick="switchTab('config')">⚙️ Configuración</button>
+            <button class="tab-btn" onclick="switchTab('logos')">🖼️ Logos</button>
+            <button class="tab-btn" onclick="switchTab('anuncios')">📢 Anuncios</button>
         </div>
 
-        <!-- TAB LOGOS -->
-        <div class="tab-content active" id="tab-logos">
+        <div class="tab-content active" id="tab-promocion">
+            <!-- FORMULARIO MANUAL -->
             <div class="card">
-                <h2>Asignar Logos a las Loterías</h2>
-                <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">
-                    Esta lista se carga automáticamente de las loterías registradas en la base de datos. Solo pega el enlace de la imagen (GitHub) al lado de cada una.
-                </p>
-                <div class="item-list" id="listaLogos">
-                    <p style="color:var(--muted);">Cargando loterías...</p>
+                <h2>Registrar Ticket Manualmente</h2>
+                <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">Usa esto si el cliente fue a la agencia y el sistema no pudo leer su ticket.</p>
+                <div class="form-manual">
+                    <input type="text" id="manNombre" placeholder="Nombre del Cliente">
+                    <input type="text" id="manTelefono" placeholder="Teléfono (809) 000-0000" maxlength="14" oninput="formatearTelefonoAdmin(this)">
+                    <input type="text" id="manTicket" placeholder="Número de Ticket (8 dígitos)">
+                    <select id="manBanca" style="width:100%; padding:12px; background:var(--bg); border:1px solid var(--border); color:white; border-radius:8px; margin-bottom:10px;">
+                        <option value="Kiko I">Kiko I</option>
+                        <option value="Kiko II">Kiko II</option>
+                    </select>
+                    <input type="date" id="manFecha">
+                    <input type="number" id="manMonto" placeholder="Monto RD$ (Ej. 150.00)" step="0.01">
+                    <button class="btn full" onclick="guardarTicketManual()">💾 Guardar Ticket Manual</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Clientes Participantes</h2>
+                <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">Haz clic en el botón de un cliente para desplegar la tabla de sus tickets.</p>
+                <div id="listaClientes"></div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="tab-config">
+            <div class="card">
+                <h2>Fechas de la Promoción</h2>
+                <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">Los tickets fuera de este rango serán rechazados.</p>
+                <label style="font-size:12px; font-weight:bold; margin-bottom:5px; display:block;">Fecha de Inicio:</label>
+                <input type="date" id="fechaInicio" style="margin-bottom:15px;">
+                <label style="font-size:12px; font-weight:bold; margin-bottom:5px; display:block;">Fecha de Fin:</label>
+                <input type="date" id="fechaFin" style="margin-bottom:15px;">
+                <button class="btn" onclick="guardarConfiguracion()">💾 Guardar Fechas</button>
+            </div>
+
+            <!-- CONTROLES DE MODO NAVIDAD -->
+            <div class="card">
+                <h2>Apariencia de la Web</h2>
+                <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">Activa o desactiva el tema navideño (logo y nieve) en todas las páginas web.</p>
+                
+                <div class="switch-container">
+                    <label class="switch">
+                        <input type="checkbox" id="toggleModoNavidad" onchange="cambiarModoNavidad(this)">
+                        <span class="slider"></span>
+                    </label>
+                    <div>
+                        <span class="switch-label" id="textoModoNavidad">Cargando...</span>
+                        <p style="font-size:11px; color:var(--muted); margin-top:3px;">El logo navideño es <code>nuevologo.png</code> y el normal es <code>nuevolovo2.png</code>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTROLES DE PROMOCIÓN -->
+            <div class="card">
+                <h2>Botón de Promoción Navidad</h2>
+                <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">Activa o desactiva el botón de "Promoción Navidad" en la página principal.</p>
+                <div class="switch-container">
+                    <label class="switch">
+                        <input type="checkbox" id="togglePromo" onchange="cambiarEstadoPromo(this)">
+                        <span class="slider"></span>
+                    </label>
+                    <span class="switch-label" id="textoEstadoPromo">Cargando...</span>
                 </div>
             </div>
         </div>
 
-        <!-- TAB ANUNCIOS -->
+        <div class="tab-content" id="tab-logos">
+            <div class="card">
+                <h2>Asignar Logos a las Loterías</h2>
+                <div class="item-list" id="listaLogos"></div>
+            </div>
+        </div>
+
         <div class="tab-content" id="tab-anuncios">
             <div class="card">
                 <h2>Agregar Anuncio</h2>
-                <p style="color:var(--muted); font-size:13px; margin-bottom:15px;">
-                    Se guardan en la misma lista <code>anunciosList</code> que usa la pizarra, por lo que los anuncios se compartirán.
-                </p>
                 <input type="url" id="anuncioUrl" placeholder="https://... (Imagen JPG/PNG o Video MP4)">
                 <button class="btn" onclick="guardarAnuncio()">💾 Guardar Anuncio</button>
             </div>
             <div class="card">
-                <h2>Anuncios Activos (Misma lista que pizarra)</h2>
+                <h2>Anuncios Activos</h2>
                 <div class="item-list" id="listaAnuncios"></div>
             </div>
         </div>
-
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -106,120 +189,229 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        function switchTab(tab) {
+        let clientesGlobales = [];
+
+        window.switchTab = function(tab) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
             document.getElementById(`tab-${tab}`).classList.add('active');
-        }
+        };
 
-        // --- LOGOS (Loterías Dinámicas) ---
-        let LOGOS_ACTUALES = {};
-        let LOTERIAS_UNICAS = new Set();
+        window.formatearTelefonoAdmin = function(input) {
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 0) val = '(' + val;
+            if (val.length > 4) val = val.slice(0, 4) + ') ' + val.slice(4);
+            if (val.length > 9) val = val.slice(0, 9) + '-' + val.slice(9);
+            if (val.length > 14) val = val.slice(0, 14);
+            input.value = val;
+        };
 
-        // 1. Escuchar logos guardados
-        database.ref('web_kiko/logos').on('value', snap => {
-            LOGOS_ACTUALES = snap.val() || {};
-            renderListaLogos();
+        window.guardarConfiguracion = function() {
+            const inicio = document.getElementById('fechaInicio').value;
+            const fin = document.getElementById('fechaFin').value;
+            if (!inicio || !fin) return alert("Selecciona ambas fechas.");
+            if (inicio > fin) return alert("La fecha de inicio no puede ser mayor que la de fin.");
+            database.ref('promocion_navidad_2026/config').update({ inicio, fin }).then(() => alert(`Fechas guardadas.`));
+        };
+
+        // --- LÓGICA DE MODO NAVIDAD ---
+        window.cambiarModoNavidad = function(checkbox) {
+            const activo = checkbox.checked;
+            database.ref('web_kiko/modo_navidad').set(activo).then(() => {
+                document.getElementById('textoModoNavidad').innerText = activo ? "Modo Navidad ACTIVADO" : "Modo Navidad DESACTIVADO";
+                document.getElementById('textoModoNavidad').style.color = activo ? "#16a34a" : "#d90000";
+            });
+        };
+
+        database.ref('web_kiko/modo_navidad').on('value', snap => {
+            const isActive = snap.val() === true;
+            document.getElementById('toggleModoNavidad').checked = isActive;
+            document.getElementById('textoModoNavidad').innerText = isActive ? "Modo Navidad ACTIVADO" : "Modo Navidad DESACTIVADO";
+            document.getElementById('textoModoNavidad').style.color = isActive ? "#16a34a" : "#d90000";
         });
 
-        // 2. Escuchar los resultados para extraer los nombres de las loterías
-        database.ref('sorteos_enloteria/resultados').on('value', snap => {
-            LOTERIAS_UNICAS.clear();
-            if(snap.exists()) {
-                snap.forEach(child => {
-                    const data = child.val();
-                    if(data && data.nombre) {
-                        LOTERIAS_UNICAS.add(data.nombre);
-                    }
+        // --- CONTROL DE BOTÓN PROMOCIÓN ---
+        window.cambiarEstadoPromo = function(checkbox) {
+            const activo = checkbox.checked;
+            database.ref('promocion_navidad_2026/config/activo').set(activo).then(() => {
+                document.getElementById('textoEstadoPromo').innerText = activo ? "Botón ACTIVADO" : "Botón DESACTIVADO";
+                document.getElementById('textoEstadoPromo').style.color = activo ? "#16a34a" : "#d90000";
+            });
+        };
+
+        database.ref('promocion_navidad_2026/config').on('value', snap => {
+            if (snap.exists()) {
+                const data = snap.val();
+                document.getElementById('fechaInicio').value = data.inicio || '';
+                document.getElementById('fechaFin').value = data.fin || '';
+                const isActive = data.activo === true;
+                document.getElementById('togglePromo').checked = isActive;
+                document.getElementById('textoEstadoPromo').innerText = isActive ? "Botón ACTIVADO" : "Botón DESACTIVADO";
+                document.getElementById('textoEstadoPromo').style.color = isActive ? "#16a34a" : "#d90000";
+            }
+        });
+
+        window.toggleTickets = function(index) {
+            const panel = document.getElementById('panel-' + index);
+            if (!panel) return;
+            if (panel.classList.contains('active')) { panel.classList.remove('active'); return; }
+            document.querySelectorAll('.tickets-panel').forEach(p => p.classList.remove('active'));
+            panel.classList.add('active');
+        };
+
+        window.guardarTicketManual = async function() {
+            const nombre = document.getElementById('manNombre').value.trim();
+            const telefono = document.getElementById('manTelefono').value.trim();
+            const numeroTicket = document.getElementById('manTicket').value.trim();
+            const banca = document.getElementById('manBanca').value;
+            const fechaTicket = document.getElementById('manFecha').value;
+            const monto = parseFloat(document.getElementById('manMonto').value) || 0;
+
+            if (!nombre || !telefono || !numeroTicket || !fechaTicket) return alert("Por favor, llena todos los campos obligatorios.");
+
+            try {
+                const ticketsRef = database.ref('promocion_navidad_2026/tickets');
+                const snapshot = await ticketsRef.orderByChild('numeroTicket').equalTo(numeroTicket).once('value');
+                if (snapshot.exists()) return alert("Error: Este número de ticket ya está registrado en el sistema.");
+
+                const clienteRef = database.ref('promocion_navidad_2026/clientes').child(telefono);
+                const clienteSnap = await clienteRef.once('value');
+                let nombreFinal = nombre;
+
+                if (clienteSnap.exists()) { nombreFinal = clienteSnap.val().nombre; } else { await clienteRef.set({ nombre: nombre, telefono: telefono }); }
+
+                await ticketsRef.push({
+                    telefono: telefono, nombreCliente: nombreFinal, numeroTicket: numeroTicket, banca: banca,
+                    fechaTicket: fechaTicket, monto: monto, fechaRegistro: firebase.database.ServerValue.TIMESTAMP
+                });
+
+                alert("¡Ticket guardado manualmente con éxito!");
+                document.getElementById('manNombre').value = ''; document.getElementById('manTelefono').value = '';
+                document.getElementById('manTicket').value = ''; document.getElementById('manFecha').value = ''; document.getElementById('manMonto').value = '';
+
+            } catch (error) { alert("Error al guardar: " + error.message); }
+        };
+
+        window.eliminarTicketIndividual = function(ticketKey) {
+            if (confirm("¿Estás seguro de eliminar SOLO este ticket? Esta acción no se puede deshacer.")) {
+                database.ref('promocion_navidad_2026/tickets/' + ticketKey).remove().then(() => alert("Ticket eliminado correctamente."));
+            }
+        };
+
+        window.eliminarTodosTickets = function(telefono) {
+            if (confirm("¿Estás seguro de eliminar TODOS los tickets de este cliente?")) {
+                database.ref('promocion_navidad_2026/tickets').orderByChild('telefono').equalTo(telefono).once('value').then(snap => {
+                    const updates = {};
+                    snap.forEach(child => { updates[child.key] = null; });
+                    database.ref('promocion_navidad_2026/tickets').update(updates).then(() => {
+                        alert("Tickets del cliente eliminados.");
+                        document.querySelectorAll('.tickets-panel').forEach(p => p.classList.remove('active'));
+                    });
                 });
             }
-            // También agregamos las que ya tengan logo guardado por si acaso
+        };
+
+        database.ref('promocion_navidad_2026/tickets').on('value', (snapshot) => {
+            const contenedor = document.getElementById('listaClientes');
+            contenedor.innerHTML = '';
+            if (!snapshot.exists()) { contenedor.innerHTML = '<p style="text-align:center; color:var(--muted);">Aún no hay tickets registrados.</p>'; return; }
+
+            const clientes = {};
+            snapshot.forEach(child => {
+                const t = child.val(); t._key = child.key;
+                if (!clientes[t.telefono]) { clientes[t.telefono] = { nombre: t.nombreCliente, telefono: t.telefono, tickets: [] }; }
+                clientes[t.telefono].tickets.push(t);
+            });
+
+            clientesGlobales = Object.values(clientes);
+            clientesGlobales.forEach((c, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'cliente-wrapper';
+                let tablaFilas = '';
+                c.tickets.forEach((t) => {
+                    const montoMostrar = t.monto ? Number(t.monto).toFixed(2) : '0.00';
+                    const fechaT = t.fechaTicket ? t.fechaTicket.split('-').reverse().join('/') : 'N/A';
+                    let fechaR = 'N/A';
+                    if (t.fechaRegistro) { const d = new Date(t.fechaRegistro); fechaR = d.toLocaleDateString('es-DO') + ' ' + d.toLocaleTimeString('es-DO', {hour: '2-digit', minute:'2-digit'}); }
+                    tablaFilas += `
+                        <tr>
+                            <td><b>${t.numeroTicket}</b></td>
+                            <td>${t.banca}</td>
+                            <td>${fechaT}</td>
+                            <td><span class="fecha-reg-tag">${fechaR}</span></td>
+                            <td><span class="monto-tag">RD$ ${montoMostrar}</span></td>
+                            <td><button class="btn btn-danger btn-sm" onclick="eliminarTicketIndividual('${t._key}')">🗑️</button></td>
+                        </tr>
+                    `;
+                });
+
+                wrapper.innerHTML = `
+                    <button class="cliente-btn" onclick="toggleTickets(${index})">
+                        <div class="cliente-datos">
+                            <span class="cliente-nombre">${c.nombre}</span>
+                            <span class="cliente-telefono"><i class="fas fa-phone"></i> ${c.telefono}</span>
+                        </div>
+                        <div class="cliente-badge"><i class="fas fa-ticket-alt"></i> ${c.tickets.length} Ticket(s)</div>
+                    </button>
+                    <div class="tickets-panel" id="panel-${index}">
+                        <div style="overflow-x:auto;">
+                            <table class="tabla-interna">
+                                <thead>
+                                    <tr><th>Ticket #</th><th>Banca</th><th>Fecha Ticket</th><th>Registrado el</th><th>Monto</th><th>Borrar</th></tr>
+                                </thead>
+                                <tbody>${tablaFilas}</tbody>
+                            </table>
+                        </div>
+                        <button class="btn btn-danger" onclick="eliminarTodosTickets('${c.telefono}')" style="width: 100%; margin-top: 15px;">🗑️ Eliminar TODOS los tickets de este cliente</button>
+                    </div>
+                `;
+                contenedor.appendChild(wrapper);
+            });
+        });
+
+        // --- LOGOS ---
+        let LOGOS_ACTUALES = {}; let LOTERIAS_UNICAS = new Set();
+        database.ref('web_kiko/logos').on('value', snap => { LOGOS_ACTUALES = snap.val() || {}; renderListaLogos(); });
+        database.ref('sorteos_enloteria/resultados').on('value', snap => {
+            LOTERIAS_UNICAS.clear();
+            if(snap.exists()) snap.forEach(child => { const data = child.val(); if(data && data.nombre) LOTERIAS_UNICAS.add(data.nombre); });
             Object.keys(LOGOS_ACTUALES).forEach(k => { if(k !== '_default') LOTERIAS_UNICAS.add(k); });
-            
             renderListaLogos();
         });
 
         function renderListaLogos() {
-            const cont = document.getElementById('listaLogos');
-            cont.innerHTML = '';
+            const cont = document.getElementById('listaLogos'); cont.innerHTML = '';
             const arrLoterias = Array.from(LOTERIAS_UNICAS).sort();
-
-            if(arrLoterias.length === 0) {
-                cont.innerHTML = '<p style="color:var(--muted);">No se han encontrado loterías en los resultados aún.</p>';
-                return;
-            }
-
+            if(arrLoterias.length === 0) { cont.innerHTML = '<p style="color:var(--muted);">No hay loterías.</p>'; return; }
             arrLoterias.forEach(nombre => {
                 const url = LOGOS_ACTUALES[nombre] || '';
                 cont.innerHTML += `
                     <div class="item">
                         ${url ? `<img src="${url}" onerror="this.src='https://placehold.co/80x60?text=Error'">` : `<div style="width:80px;height:60px;background:#000;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#666;">Sin Logo</div>`}
-                        <div class="item-info">
-                            <div class="nombre">${nombre}</div>
-                            <input type="url" id="input_logo_${nombre.replace(/\s+/g, '_')}" value="${url}" placeholder="Pega el link del logo aquí...">
-                        </div>
+                        <div class="item-info"><div class="nombre">${nombre}</div><input type="url" id="input_logo_${nombre.replace(/\s+/g, '_')}" value="${url}" placeholder="Pega el link del logo aquí..."></div>
                         <button class="btn" onclick="guardarLogo('${nombre.replace(/'/g, "\\'")}')">💾</button>
                         ${url ? `<button class="btn btn-danger" onclick="eliminarLogo('${nombre.replace(/'/g, "\\'")}')">🗑️</button>` : ''}
                     </div>
                 `;
             });
         }
+        window.guardarLogo = function(nombre) { const inputId = `input_logo_${nombre.replace(/\s+/g, '_')}`; const url = document.getElementById(inputId).value.trim(); if(!url) return alert('Pega un link válido'); database.ref(`web_kiko/logos/${nombre}`).set(url).then(() => alert(`Logo de ${nombre} guardado`)); }
+        window.eliminarLogo = function(nombre) { if(confirm(`¿Eliminar logo de ${nombre}?`)) database.ref(`web_kiko/logos/${nombre}`).remove(); }
 
-        function guardarLogo(nombre) {
-            const inputId = `input_logo_${nombre.replace(/\s+/g, '_')}`;
-            const url = document.getElementById(inputId).value.trim();
-            if(!url) return alert('Pega un link válido');
-            
-            database.ref(`web_kiko/logos/${nombre}`).set(url)
-                .then(() => alert(`Logo de ${nombre} guardado`));
-        }
-
-        function eliminarLogo(nombre) {
-            if(confirm(`¿Eliminar logo de ${nombre}?`)) database.ref(`web_kiko/logos/${nombre}`).remove();
-        }
-
-        // --- ANUNCIOS (Lee de anunciosList, la misma de la pizarra) ---
-        function guardarAnuncio() {
-            const url = document.getElementById('anuncioUrl').value.trim();
-            if(!url) return alert('Pega una URL válida');
-            
-            // Guardamos en la misma ruta que usa la pizarra
-            database.ref('anunciosList').push({ url: url, activo: true, tiempo: 15 })
-                .then(() => {
-                    alert('Anuncio guardado');
-                    document.getElementById('anuncioUrl').value = '';
-                });
-        }
-
+        // --- ANUNCIOS ---
+        window.guardarAnuncio = function() { const url = document.getElementById('anuncioUrl').value.trim(); if(!url) return alert('Pega una URL válida'); database.ref('anunciosList').push({ url: url, activo: true, tiempo: 15 }).then(() => { alert('Anuncio guardado'); document.getElementById('anuncioUrl').value = ''; }); }
         database.ref('anunciosList').on('value', snap => {
-            const cont = document.getElementById('listaAnuncios');
-            cont.innerHTML = '';
-            if(snap.exists()) {
-                snap.forEach(child => {
-                    const id = child.key;
-                    const data = child.val();
-                    if(!data.url) return;
-                    const isVid = data.url.includes('.mp4') || data.url.includes('raw.githubusercontent');
-                    const media = isVid ? `<video src="${data.url}" muted autoplay loop></video>` : `<img src="${data.url}">`;
-                    cont.innerHTML += `
-                        <div class="item">
-                            ${media}
-                            <div class="item-info">
-                                <input type="url" value="${data.url}" readonly>
-                            </div>
-                            <button class="btn btn-danger" onclick="eliminarAnuncio('${id}')">🗑️</button>
-                        </div>
-                    `;
-                });
-            } else {
-                cont.innerHTML = '<p style="color:var(--muted);">No hay anuncios activos.</p>';
-            }
+            const cont = document.getElementById('listaAnuncios'); cont.innerHTML = '';
+            if(snap.exists()) snap.forEach(child => {
+                const id = child.key; const data = child.val(); if(!data.url) return;
+                const isVid = data.url.includes('.mp4') || data.url.includes('raw.githubusercontent');
+                const media = isVid ? `<video src="${data.url}" muted autoplay loop></video>` : `<img src="${data.url}">`;
+                cont.innerHTML += `<div class="item">${media}<div class="item-info"><input type="url" value="${data.url}" readonly></div><button class="btn btn-danger" onclick="eliminarAnuncio('${id}')">🗑️</button></div>`;
+            });
+            else cont.innerHTML = '<p style="color:var(--muted);">No hay anuncios activos.</p>';
         });
-
-        function eliminarAnuncio(id) {
-            if(confirm('¿Eliminar anuncio?')) database.ref(`anunciosList/${id}`).remove();
-        }
+        window.eliminarAnuncio = function(id) { if(confirm('¿Eliminar anuncio?')) database.ref(`anunciosList/${id}`).remove(); }
     </script>
 </body>
 </html>
