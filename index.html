@@ -5,18 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bancas Kiko | La confianza en tu jugada</title>
     <link rel="icon" type="image/png" href="nuevologo.png">
-    
-    <!-- ✅ PRECARGA DEL LOGO PRINCIPAL -->
-    <link rel="preload" as="image" href="nuevologo.png">
 
+    <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+    <link rel="preconnect" href="https://pizarra-loteria-36ba5-default-rtdb.firebaseio.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+    <link rel="preload" as="image" href="nuevologo.png" fetchpriority="high">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
             --azul-rey: #0033a0;
             --azul-oscuro: #001f5c;
             --rojo: #d90000;
             --dorado: #ffcc00;
+            --naranja: #f97316;
             --blanco: #ffffff;
             --gris-fondo: #f4f7f6;
             --texto-oscuro: #1e293b;
@@ -24,9 +32,14 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: var(--gris-fondo); color: var(--texto-oscuro); overflow-x: hidden; scroll-behavior: smooth; }
+        body { background: var(--gris-fondo); color: var(--texto-oscuro); overflow-x: hidden; scroll-behavior: smooth; position: relative; }
 
-        /* --- HEADER Y MENÚ --- */
+        /* --- ANIMACIÓN DE NIEVE --- */
+        #snow-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; overflow: hidden; display: none; }
+        .snowflake { position: absolute; top: -10px; color: white; opacity: 0.8; animation: fall linear infinite; }
+        @keyframes fall { to { transform: translateY(105vh); } }
+
+        /* --- HEADER --- */
         header {
             background: linear-gradient(90deg, var(--azul-oscuro) 0%, var(--azul-rey) 100%);
             position: fixed; width: 100%; top: 0; z-index: 1000;
@@ -38,193 +51,137 @@
             padding: 10px 5%; max-width: 1400px; margin: 0 auto; gap: 20px;
         }
 
-        .logo-container {
-            display: flex; align-items: center; gap: 12px;
-            text-decoration: none; cursor: pointer; transition: 0.3s;
-        }
+        .logo-container { display: flex; align-items: center; gap: 12px; text-decoration: none; cursor: pointer; transition: 0.3s; }
         .logo-container:hover { transform: scale(1.02); }
-        .logo-container img {
-            height: 65px; width: auto; object-fit: contain;
-            filter: drop-shadow(0 3px 6px rgba(0,0,0,0.55));
-            transition: 0.3s;
-        }
-        .logo-text {
-            display: flex; flex-direction: column; justify-content: center;
-            line-height: 1;
-        }
-        .logo-title {
-            font-size: 24px; font-weight: 900; color: var(--blanco);
-            letter-spacing: 0.5px; text-transform: uppercase;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.5);
-            white-space: nowrap;
-        }
+        .logo-container img { height: 75px; width: auto; object-fit: contain; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.55)); transition: 0.3s; } /* Logo más grande */
+        .logo-text { display: flex; flex-direction: column; justify-content: center; line-height: 1; }
+        .logo-title { font-size: 26px; font-weight: 900; color: var(--blanco); letter-spacing: 0.5px; text-transform: uppercase; text-shadow: 0 2px 6px rgba(0,0,0,0.5); white-space: nowrap; }
         .logo-title span { color: var(--dorado); }
-        .logo-slogan {
-            font-size: 11px; font-weight: 600; color: #cbd5e1;
-            letter-spacing: 1.5px; text-transform: uppercase;
-            margin-top: 4px; opacity: 0.9;
-            white-space: nowrap;
-        }
+        .logo-slogan { font-size: 11px; font-weight: 600; color: #cbd5e1; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; opacity: 0.9; white-space: nowrap; }
 
-        .hamburger { 
-            display: none; 
-            font-size: 26px; 
-            cursor: pointer; 
-            color: var(--dorado); 
-            background: rgba(255,255,255,0.08); 
-            border: 2px solid var(--dorado); 
-            border-radius: 10px;
-            width: 46px; height: 46px;
-            align-items: center; justify-content: center;
-            transition: 0.3s; 
-            margin-left: auto;
-        }
+        .hamburger { display: none; font-size: 26px; cursor: pointer; color: var(--dorado); background: rgba(255,255,255,0.08); border: 2px solid var(--dorado); border-radius: 10px; width: 46px; height: 46px; align-items: center; justify-content: center; transition: 0.3s; margin-left: auto; }
         .hamburger:hover { background: var(--dorado); color: var(--azul-oscuro); transform: scale(1.05); }
 
-        nav ul { display: flex; list-style: none; gap: 8px; align-items: center; }
-        nav a {
-            color: var(--blanco); text-decoration: none; font-weight: 600; font-size: 14px;
-            transition: all 0.3s; position: relative; padding: 10px 14px; border-radius: 10px;
-            display: inline-flex; align-items: center; gap: 6px;
-        }
+        nav ul { display: flex; list-style: none; gap: 6px; align-items: center; }
+        nav a { color: var(--blanco); text-decoration: none; font-weight: 600; font-size: 13px; transition: all 0.3s; position: relative; padding: 10px 12px; border-radius: 10px; display: inline-flex; align-items: center; gap: 6px; }
         nav a i { font-size: 12px; opacity: 0.8; }
         nav a:hover { color: var(--dorado); background: rgba(255,255,255,0.08); }
-        nav a::after { 
-            content: ''; position: absolute; width: 0; height: 3px; bottom: 4px; left: 50%;
-            transform: translateX(-50%); background: var(--dorado); transition: 0.3s; border-radius: 5px;
-        }
+        nav a::after { content: ''; position: absolute; width: 0; height: 3px; bottom: 4px; left: 50%; transform: translateX(-50%); background: var(--dorado); transition: 0.3s; border-radius: 5px; }
         nav a:hover::after { width: 60%; }
-
-        nav a.nav-highlight {
-            background: var(--dorado); color: var(--azul-oscuro);
-            font-weight: 800; box-shadow: 0 4px 12px rgba(255,204,0,0.35);
-        }
-        nav a.nav-highlight:hover {
-            background: white; color: var(--azul-oscuro);
-            transform: translateY(-2px); box-shadow: 0 6px 18px rgba(255,204,0,0.55);
-        }
+        nav a.nav-highlight { background: var(--dorado); color: var(--azul-oscuro); font-weight: 800; box-shadow: 0 4px 12px rgba(255,204,0,0.35); }
+        nav a.nav-highlight:hover { background: white; color: var(--azul-oscuro); transform: translateY(-2px); box-shadow: 0 6px 18px rgba(255,204,0,0.55); }
         nav a.nav-highlight::after { display: none; }
 
-        .mobile-nav {
-            position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100vh;
-            background: linear-gradient(180deg, var(--azul-oscuro) 0%, #00123a 100%);
-            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; flex-direction: column; padding-top: 30px; gap: 4px; z-index: 2000;
-            box-shadow: -8px 0 25px rgba(0,0,0,0.6); border-left: 4px solid var(--dorado);
-            overflow-y: auto;
-        }
+        .mobile-nav { position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100vh; background: linear-gradient(180deg, var(--azul-oscuro) 0%, #00123a 100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); display: flex; flex-direction: column; padding-top: 30px; gap: 4px; z-index: 2000; box-shadow: -8px 0 25px rgba(0,0,0,0.6); border-left: 4px solid var(--dorado); overflow-y: auto; }
         .mobile-nav.active { right: 0; }
-
-        .mobile-nav-header {
-            display: flex; align-items: center; gap: 10px;
-            padding: 0 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
-            margin-bottom: 10px;
-        }
+        .mobile-nav-header { display: flex; align-items: center; gap: 10px; padding: 0 20px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 10px; }
         .mobile-nav-header img { height: 45px; }
-        .mobile-nav-header .mob-title {
-            font-size: 16px; font-weight: 900; color: var(--blanco);
-            text-transform: uppercase; letter-spacing: 0.5px;
-        }
+        .mobile-nav-header .mob-title { font-size: 16px; font-weight: 900; color: var(--blanco); text-transform: uppercase; letter-spacing: 0.5px; }
         .mobile-nav-header .mob-title span { color: var(--dorado); }
-        .mobile-nav-header .mob-slogan {
-            font-size: 9px; color: #94a3b8; letter-spacing: 1px;
-            text-transform: uppercase; margin-top: 2px;
-        }
-
-        .mobile-nav a {
-            color: var(--blanco); text-decoration: none; font-size: 16px; font-weight: 600;
-            display: flex; align-items: center; gap: 14px;
-            padding: 15px 22px; margin: 0 12px; border-radius: 10px;
-            transition: 0.25s;
-        }
-        .mobile-nav a i {
-            width: 22px; text-align: center; font-size: 15px; color: var(--dorado);
-            transition: 0.25s;
-        }
-        .mobile-nav a:hover, .mobile-nav a:active {
-            color: var(--dorado); background: rgba(255,204,0,0.08);
-            transform: translateX(4px);
-        }
+        .mobile-nav-header .mob-slogan { font-size: 9px; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+        .mobile-nav a { color: var(--blanco); text-decoration: none; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 14px; padding: 15px 22px; margin: 0 12px; border-radius: 10px; transition: 0.25s; }
+        .mobile-nav a i { width: 22px; text-align: center; font-size: 15px; color: var(--dorado); transition: 0.25s; }
+        .mobile-nav a:hover, .mobile-nav a:active { color: var(--dorado); background: rgba(255,204,0,0.08); transform: translateX(4px); }
         .mobile-nav a:hover i { transform: scale(1.15); }
-
-        .mobile-nav a.mobile-highlight {
-            background: var(--dorado); color: var(--azul-oscuro);
-            font-weight: 800; margin-top: 10px;
-            box-shadow: 0 4px 14px rgba(255,204,0,0.4);
-        }
+        .mobile-nav a.mobile-highlight { background: var(--dorado); color: var(--azul-oscuro); font-weight: 800; margin-top: 10px; box-shadow: 0 4px 14px rgba(255,204,0,0.4); }
         .mobile-nav a.mobile-highlight i { color: var(--azul-oscuro); }
         .mobile-nav a.mobile-highlight:hover { background: white; }
 
-        .close-menu { 
-            position: absolute; top: 15px; right: 15px; font-size: 22px; 
-            color: var(--blanco); cursor: pointer; 
-            background: rgba(217,0,0,0.9); border: none;
-            width: 40px; height: 40px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.3s; box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-        }
+        .close-menu { position: absolute; top: 15px; right: 15px; font-size: 22px; color: var(--blanco); cursor: pointer; background: rgba(217,0,0,0.9); border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 3px 10px rgba(0,0,0,0.3); }
         .close-menu:hover { background: var(--rojo); transform: rotate(90deg); }
-
-        .menu-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.65); z-index: 1999; opacity: 0; 
-            pointer-events: none; transition: 0.3s; backdrop-filter: blur(3px);
-        }
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1999; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(3px); }
         .menu-overlay.active { opacity: 1; pointer-events: auto; }
 
-        /* --- SLIDER DE ANUNCIOS --- */
-        .slider-container {
-            margin-top: 91px; width: 100%; height: 400px; 
-            background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-rey) 100%); 
-            position: relative; overflow: hidden; border-bottom: 5px solid var(--rojo);
-            display: flex; align-items: center; justify-content: center;
-        }
-        .slide {
-            position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease-in-out;
-            display: flex; justify-content: center; align-items: center;
-        }
+        /* --- SLIDER --- */
+        .slider-container { margin-top: 95px; width: 100%; height: 400px; background: linear-gradient(135deg, var(--azul-oscuro) 0%, var(--azul-rey) 100%); position: relative; overflow: hidden; border-bottom: 5px solid var(--rojo); display: flex; align-items: center; justify-content: center; }
+        .slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 0.8s ease-in-out; display: flex; justify-content: center; align-items: center; }
         .slide.active { opacity: 1; }
         .slide img, .slide video { width: 100%; height: 100%; object-fit: contain; }
 
-        /* --- SECCIONES DE RESULTADOS --- */
+        /* ✅ BOTÓN PROMOCIÓN NAVIDAD */
+        .promo-container { display: none; width: 100%; padding: 20px 5%; text-align: center; background: var(--gris-fondo); }
+        .promo-container.active { display: block; }
+        .btn-promo {
+            display: inline-flex; align-items: center; justify-content: center; gap: 15px;
+            background: linear-gradient(135deg, var(--rojo) 0%, #ffcc00 100%);
+            color: white; padding: 20px 40px; border-radius: 50px; text-decoration: none;
+            font-size: 20px; font-weight: 900; box-shadow: 0 10px 25px rgba(217,0,0,0.4);
+            transition: 0.3s; animation: pulse 2s infinite;
+        }
+        .btn-promo:hover { transform: scale(1.05); box-shadow: 0 15px 35px rgba(217,0,0,0.6); color: white; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.03); } 100% { transform: scale(1); } }
+
+        /* --- SECCIONES --- */
         .results-section { padding: 60px 5%; }
         .bg-azul { background: var(--azul-oscuro); color: white; }
         .bg-gris { background: var(--gris-fondo); color: var(--texto-oscuro); }
-        
+
         .results-header { display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; gap: 15px; text-align: center;}
         .results-header h2 { font-size: 32px; font-weight: 900; color: var(--dorado); text-transform: uppercase; }
         .bg-gris .results-header h2 { color: var(--azul-rey); }
-        
+
         .grid-loterias { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; max-width: 1300px; margin: 0 auto; }
         .card-loteria { background: white; border-radius: 20px; padding: 25px 20px; color: var(--texto-oscuro); text-align: center; box-shadow: 0 8px 25px rgba(0,0,0,0.15); position: relative; overflow: hidden; }
         .card-loteria::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--dorado); }
-        .card-loteria img { height: 65px; object-fit: contain; margin-bottom: 10px; }
-        .loteria-nombre { font-weight: 800; font-size: 18px; margin-bottom: 5px; color: var(--azul-rey); text-transform: uppercase; }
-        
-        .timer-box {
-            display: inline-flex; align-items: center; gap: 8px; background: #ffe4e6; color: var(--rojo);
-            padding: 8px 18px; border-radius: 20px; font-size: 16px; font-weight: 900; margin-bottom: 15px;
-            font-variant-numeric: tabular-nums;
+
+        .card-loteria img { height: 90px; width: 100%; max-width: 220px; object-fit: contain; margin: 0 auto 12px; display: block; padding: 6px; }
+
+        .loteria-nombre { font-weight: 800; font-size: 18px; margin-bottom: 6px; color: var(--azul-rey); text-transform: uppercase; }
+
+        .cat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            line-height: 1.4;
         }
-        
-        /* ✅ BOLOS MÁS GRANDES */
+        .cat-badge.dominicana { background: #dbeafe; color: #1e40af; }
+        .cat-badge.extranjera { background: #f3e8ff; color: #7e22ce; }
+        .cat-badge.anguilla { background: #ffedd5; color: #c2410c; }
+        .cat-badge i { font-size: 9px; }
+
+        .timer-box { display: inline-flex; align-items: center; gap: 8px; background: #ffe4e6; color: var(--rojo); padding: 8px 18px; border-radius: 20px; font-size: 16px; font-weight: 900; margin-bottom: 15px; font-variant-numeric: tabular-nums; }
+
         .bolos-container { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
-        .bolo { 
-            width: 70px; height: 70px; border-radius: 50%; 
-            display: flex; align-items: center; justify-content: center; 
-            font-weight: 900; font-size: 28px; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3); 
-            box-shadow: inset -5px -5px 12px rgba(0,0,0,0.2), inset 4px 4px 10px rgba(255,255,255,0.6), 0 8px 20px rgba(0,0,0,0.25); 
-        }
+        .bolo { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 28px; text-shadow: 0 2px 4px rgba(0,0,0,0.3); box-shadow: inset -5px -5px 12px rgba(0,0,0,0.2), inset 4px 4px 10px rgba(255,255,255,0.6), 0 8px 20px rgba(0,0,0,0.25); }
         .bolo.hoy { background: radial-gradient(circle at 30% 30%, #60a5fa, #1e40af); color: white; }
         .bolo.ayer { background: radial-gradient(circle at 30% 30%, #ffffff, #cbd5e1); color: var(--azul-oscuro); }
 
-        .fecha-tag { display: inline-block; background: var(--gris-fondo); padding: 6px 18px; border-radius: 20px; font-size: 13px; font-weight: 800; color: var(--texto-gris); text-transform: uppercase; }
+        .bolo-wrapper { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        .bolo-label { font-size: 11px; font-weight: 800; color: var(--texto-gris); text-transform: uppercase; letter-spacing: 0.5px; background: #e2e8f0; padding: 2px 8px; border-radius: 8px; }
+        .bg-azul .card-loteria .bolo-label { background: #dbeafe; color: var(--azul-rey); }
+
+        .fecha-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 4px;
+            background: var(--gris-fondo);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--texto-gris);
+            text-transform: uppercase;
+            max-width: 100%;
+            box-sizing: border-box;
+            white-space: normal;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .bg-azul .card-loteria .fecha-tag { background: rgba(255,255,255,0.12); color: #cbd5e1; }
 
         .btn-ver-mas { display: inline-flex; align-items: center; gap: 10px; background: var(--dorado); color: var(--azul-oscuro); padding: 15px 40px; border-radius: 50px; font-size: 18px; font-weight: 900; text-decoration: none; margin-top: 30px; cursor: pointer; border: none; transition: 0.3s; box-shadow: 0 5px 15px rgba(255,204,0,0.4); }
         .btn-ver-mas:hover { background: white; transform: translateY(-3px); box-shadow: 0 8px 25px rgba(255,204,0,0.6); }
 
-        /* --- SECCIÓN ESTADÍSTICAS --- */
+        /* --- ESTADÍSTICAS --- */
         .stats-section { padding: 80px 5%; background: #0f172a; color: white; text-align: center; }
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; max-width: 800px; margin: 0 auto; }
         .stats-card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; border: 2px solid rgba(255,255,255,0.1); }
@@ -236,33 +193,27 @@
         .stats-card.calientes .stats-bolo { background: linear-gradient(135deg, #f87171, #b91c1c); color: white; }
         .stats-card.frios .stats-bolo { background: linear-gradient(135deg, #93c5fd, #1d4ed8); color: white; }
 
-        /* --- SECCIÓN CÓMO JUGAR --- */
+        /* --- CÓMO JUGAR --- */
         .how-to-play { padding: 80px 5%; background: var(--blanco); text-align: center; }
         .section-title { font-size: 36px; font-weight: 900; color: var(--azul-rey); margin-bottom: 40px; position: relative; display: inline-block; text-transform: uppercase; }
         .section-title::after { content: ''; position: absolute; width: 60%; height: 5px; background: var(--rojo); bottom: -10px; left: 20%; border-radius: 5px; }
-        
+
         .play-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
         .play-card { background: var(--gris-fondo); padding: 30px; border-radius: 20px; border: 2px solid transparent; transition: 0.3s; text-align: left; }
         .play-card:hover { border-color: var(--dorado); transform: translateY(-5px); background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .play-card h3 { font-size: 24px; color: var(--azul-rey); font-weight: 800; margin-bottom: 10px; text-align: center; }
         .play-card p { color: var(--texto-gris); font-size: 14px; line-height: 1.6; margin-bottom: 20px; text-align: center; }
-        
+
         .example-box { background: white; padding: 15px; border-radius: 15px; border: 1px solid #e2e8f0; display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;}
         .example-row { display: flex; align-items: center; justify-content: space-between; }
         .example-bolos { display: flex; gap: 5px; }
         .bolo-sm { width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; background: radial-gradient(circle at 30% 30%, #60a5fa, #1e40af); color: white; }
         .pago-tag { background: #dcfce7; color: #15803d; padding: 4px 10px; border-radius: 10px; font-weight: 800; font-size: 13px; text-align: center;}
 
-        /* --- SECCIÓN PRODUCTOS --- */
+        /* --- PRODUCTOS --- */
         .products-section { padding: 80px 5%; background: var(--gris-fondo); text-align: center; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
-        
-        .product-card { 
-            background: white; padding: 30px 20px; border-radius: 20px; 
-            border: 2px solid transparent; transition: 0.3s; 
-            display: flex; flex-direction: column; align-items: center; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
-        }
+        .product-card { background: white; padding: 30px 20px; border-radius: 20px; border: 2px solid transparent; transition: 0.3s; display: flex; flex-direction: column; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .product-card:hover { border-color: var(--dorado); transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .product-card img { width: 70px; height: 70px; object-fit: contain; margin-bottom: 15px; padding: 10px; background: var(--gris-fondo); border-radius: 50%; }
         .product-card h3 { font-size: 18px; color: var(--azul-rey); font-weight: 800; margin-bottom: 8px; }
@@ -271,50 +222,51 @@
         footer { background: #000814; color: #94a3b8; text-align: center; padding: 40px 20px; font-size: 14px; border-top: 5px solid var(--rojo); }
         footer strong { color: var(--dorado); font-size: 18px; }
 
-        #connBanner {
-            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
-            padding: 12px 20px; border-radius: 10px; font-weight: 700;
-            font-size: 14px; color: white; transition: 0.4s;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            opacity: 0; pointer-events: none;
-        }
+        #connBanner { position: fixed; bottom: 20px; right: 20px; z-index: 9999; padding: 12px 20px; border-radius: 10px; font-weight: 700; font-size: 14px; color: white; transition: 0.4s; box-shadow: 0 5px 15px rgba(0,0,0,0.3); opacity: 0; pointer-events: none; }
         #connBanner.show { opacity: 1; }
 
         @media (max-width: 900px) {
-            nav ul { gap: 4px; }
-            nav a { padding: 8px 10px; font-size: 13px; }
+            nav ul { gap: 2px; }
+            nav a { padding: 8px 8px; font-size: 12px; }
             nav a i { display: none; }
         }
 
         @media (max-width: 768px) {
             .hamburger { display: flex; }
             nav ul { display: none; }
-            .logo-container img { height: 52px; }
+            .logo-container img { height: 55px; }
             .logo-title { font-size: 18px; }
             .logo-slogan { font-size: 9px; letter-spacing: 1px; }
             .slider-container { height: 250px; margin-top: 78px; }
             .results-header h2, .section-title { font-size: 26px; }
-            /* ✅ BOLOS MÁS GRANDES EN MÓVIL TAMBIÉN */
             .bolo { width: 60px; height: 60px; font-size: 24px; }
             .stats-grid { grid-template-columns: 1fr; }
             .grid-loterias { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+            .card-loteria img { height: 75px; max-width: 180px; }
+            .fecha-tag { font-size: 11px; padding: 5px 12px; gap: 3px; }
+            .btn-promo { font-size: 16px; padding: 15px 25px; }
         }
 
         @media (max-width: 420px) {
             .logo-title { font-size: 15px; }
             .logo-slogan { font-size: 8px; }
-            .logo-container img { height: 44px; }
+            .logo-container img { height: 48px; }
             .hamburger { width: 42px; height: 42px; font-size: 22px; }
             .bolo { width: 55px; height: 55px; font-size: 22px; }
+            .bolo-label { font-size: 10px; padding: 2px 6px; }
+            .fecha-tag { font-size: 10px; padding: 4px 10px; width: 100%; border-radius: 12px; }
+            .card-loteria { padding: 20px 12px; }
         }
     </style>
 </head>
 <body>
 
+    <div id="snow-container"></div>
+
     <header>
         <div class="header-content">
             <a href="#inicio" class="logo-container">
-                <img src="nuevologo.png" alt="Bancas Kiko">
+                <img id="mainLogo" src="nuevologo.png" alt="Bancas Kiko" width="75" height="75" fetchpriority="high">
                 <div class="logo-text">
                     <div class="logo-title">Bancas <span>Kiko</span></div>
                     <div class="logo-slogan">La confianza en tu jugada</div>
@@ -346,7 +298,7 @@
         </button>
 
         <div class="mobile-nav-header">
-            <img src="nuevologo.png" alt="Bancas Kiko">
+            <img id="mobileLogo" src="nuevologo.png" alt="Bancas Kiko" width="45" height="45">
             <div>
                 <div class="mob-title">Bancas <span>Kiko</span></div>
                 <div class="mob-slogan">La confianza en tu jugada</div>
@@ -368,6 +320,13 @@
         </div>
     </section>
 
+    <div class="promo-container" id="promoContainer">
+        <a href="promocion.html" class="btn-promo">
+            <i class="fas fa-gift" style="font-size: 30px;"></i>
+            ¡Participa en la Promoción Navidad 2026!
+        </a>
+    </div>
+
     <section class="results-section bg-azul" id="proximos">
         <div class="results-header">
             <h2>Próximos Sorteos a Salir</h2>
@@ -382,7 +341,7 @@
             <p style="color:var(--texto-gris);">Los 6 sorteos que acaban de salir</p>
         </div>
         <div class="grid-loterias" id="resultsGridRecientes"></div>
-        
+
         <div style="text-align: center;">
             <a href="resultados.html" class="btn-ver-mas">Ver todos los resultados <i class="fas fa-arrow-right"></i></a>
         </div>
@@ -391,7 +350,7 @@
     <section class="stats-section" id="estadisticas">
         <h2 class="section-title" style="color: white; margin-bottom: 40px;">Estadísticas de Números</h2>
         <p style="color: #94a3b8; margin-bottom: 40px;">Números que más y menos han salido en los últimos resultados</p>
-        
+
         <div class="stats-grid">
             <div class="stats-card calientes">
                 <h3><i class="fas fa-fire"></i> Más Calientes</h3>
@@ -409,7 +368,7 @@
         <p style="color: var(--texto-gris); margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto;">
             Conoce nuestras modalidades de juego. Las ganancias indicadas son <strong>por cada peso apostado (RD$1)</strong>.
         </p>
-        
+
         <div class="play-grid">
             <div class="play-card">
                 <h3>Quiniela</h3>
@@ -473,7 +432,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="play-card">
                 <h3>Tripleta</h3>
                 <p>Acierta los 3 números exactos en el orden correcto.</p>
@@ -504,14 +463,50 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script>
-        /* ============================================================
-           CONFIGURACIÓN FIREBASE
-        ============================================================ */
         const firebaseConfig = { databaseURL: "https://pizarra-loteria-36ba5-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         document.getElementById('yearActual').textContent = new Date().getFullYear();
+
+        // --- LÓGICA DE MODO NAVIDAD (LOGO Y NIEVE) ---
+        database.ref('web_kiko/modo_navidad').on('value', snap => {
+            const modoNavidad = snap.val() === true;
+            const mainLogo = document.getElementById('mainLogo');
+            const mobileLogo = document.getElementById('mobileLogo');
+            const snowContainer = document.getElementById('snow-container');
+            
+            if (modoNavidad) {
+                // Activar Navidad
+                mainLogo.src = "nuevologo.png";
+                mobileLogo.src = "nuevologo.png";
+                snowContainer.style.display = 'block';
+                iniciarNieve();
+            } else {
+                // Desactivar Navidad
+                mainLogo.src = "nuevolovo2.png"; // Asegúrate de tener esta imagen
+                mobileLogo.src = "nuevolovo2.png";
+                snowContainer.style.display = 'none';
+                snowContainer.innerHTML = '';
+            }
+        });
+
+        function iniciarNieve() {
+            const container = document.getElementById('snow-container');
+            if(container.innerHTML !== '') return; // Evitar duplicados
+            const copos = ['❅', '❆', '❄', '•'];
+            for (let i = 0; i < 40; i++) {
+                const copo = document.createElement('div');
+                copo.className = 'snowflake';
+                copo.innerText = copos[Math.floor(Math.random() * copos.length)];
+                copo.style.left = Math.random() * 100 + 'vw';
+                copo.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                copo.style.animationDelay = Math.random() * 5 + 's';
+                copo.style.opacity = Math.random() * 0.5 + 0.3;
+                copo.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                container.appendChild(copo);
+            }
+        }
 
         function toggleMenu() {
             document.getElementById('mobileNav').classList.toggle('active');
@@ -525,120 +520,148 @@
         let proximosSorteesGlobal = [];
         let sliderIntervalId = null;
 
-        function getFechaStr(offsetDias = 0) {
-            const d = new Date();
-            d.setDate(d.getDate() + offsetDias);
-            const año = d.getFullYear();
-            const mes = String(d.getMonth() + 1).padStart(2, '0');
-            const dia = String(d.getDate()).padStart(2, '0');
-            return `${año}-${mes}-${dia}`;
-        }
-
-        /* ============================================================
-           NUEVA FUNCIÓN: GUARDAR IMÁGENES EN CACHÉ DEL NAVEGADOR
-        ============================================================ */
-        async function guardarEnCacheNavegador(url) {
-            if (!('caches' in window)) return url; // Si no soporta caché, devuelve normal
-            try {
-                const cache = await caches.open('kiko-imagenes-v1');
-                const respuestaCache = await cache.match(url);
-                
-                if (respuestaCache) {
-                    // Si ya está en caché, devolvemos el Blob URL (es instantáneo)
-                    const blob = await respuestaCache.blob();
-                    return URL.createObjectURL(blob);
-                } else {
-                    // Si no está, la descargamos y la guardamos
-                    const respuestaRed = await fetch(url, { mode: 'cors' });
-                    if (respuestaRed.ok) {
-                        await cache.put(url, respuestaRed.clone());
-                        const blob = await respuestaRed.blob();
-                        return URL.createObjectURL(blob);
-                    }
-                }
-            } catch (e) {
-                console.warn("Error en caché, usando URL directa:", url);
+        database.ref('promocion_navidad_2026/config/activo').on('value', snap => {
+            const promoActiva = snap.val();
+            const promoContainer = document.getElementById('promoContainer');
+            if (promoActiva === true) {
+                promoContainer.classList.add('active');
+            } else {
+                promoContainer.classList.remove('active');
             }
-            return url;
+        });
+
+        // ... (El resto de tus funciones de Firebase, loterías, etc. se mantienen igual)
+        function normalizar(str) {
+            return String(str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ').trim();
+        }
+        function getFechaStr(offsetDias = 0) {
+            const d = new Date(); d.setDate(d.getDate() + offsetDias);
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        }
+        function esDomingo(fechaRD) {
+            if (fechaRD) { const [y, m, d] = String(fechaRD).split('-').map(Number); return new Date(y, m - 1, d).getDay() === 0; }
+            return new Date().getDay() === 0;
+        }
+        function formatearFechaCorta(fechaStr, esHoy) {
+            if (esHoy) return 'HOY';
+            if (!fechaStr) return 'AYER';
+            const isoMatch = String(fechaStr).match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (isoMatch) {
+                const meses = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+                return `${parseInt(isoMatch[3], 10)} ${meses[parseInt(isoMatch[2], 10) - 1]}`;
+            }
+            return fechaStr;
+        }
+        const RENOMBRES = {
+            'la suerte': 'La Suerte 12:30pm', 'la suerte 12:30': 'La Suerte 12:30pm', 'la suerte 12:30pm': 'La Suerte 12:30pm',
+            'king lottery dia': 'King Lottery Día', 'king lottery día': 'King Lottery Día', 'king lottery': 'King Lottery Día',
+            'real': 'Real Día', 'real dia': 'Real Día', 'real día': 'Real Día',
+            'la primera': 'La Primera Día', 'la primera dia': 'La Primera Día', 'la primera día': 'La Primera Día',
+            'lotedom': 'LoteDom Día', 'lotedom dia': 'LoteDom Día', 'lotedom día': 'LoteDom Día',
+            'leidsa': 'Leidsa Quiniela Palé', 'leidsa quiniela pale': 'Leidsa Quiniela Palé', 'leidsa quiniela palé': 'Leidsa Quiniela Palé', 'leidsa pale': 'Leidsa Quiniela Palé', 'leidsa palé': 'Leidsa Quiniela Palé'
+        };
+        function aplicarRenombre(nombre, horaOriginal, fechaRD) {
+            if (!nombre) return nombre;
+            const key = normalizar(nombre);
+            const domingo = esDomingo(fechaRD);
+            if (domingo && key.includes('la suerte') && String(horaOriginal || '').toUpperCase().includes('6:00')) return 'La Suerte 9PM';
+            return RENOMBRES[key] || nombre;
+        }
+        function obtenerHoraRealLoteria(nombre, horaOriginal, fechaRD) {
+            const n = normalizar(nombre);
+            const domingo = esDomingo(fechaRD);
+            if (domingo && n.includes('la suerte') && String(horaOriginal).toUpperCase().includes('6:00')) return '09:00PM';
+            if (domingo && n.includes('nacional') && n.includes('noche')) return '06:00PM';
+            if (n.includes('leidsa') && String(horaOriginal).includes('4:00')) { if (!domingo) return null; }
+            return horaOriginal;
+        }
+        function getCategoriaLoteria(nombreOriginal, categoriaFirebase) {
+            const key = normalizar(nombreOriginal);
+            if (key.includes('anguilla') || key.includes('anguilas')) return 'anguilla';
+            if (categoriaFirebase && String(categoriaFirebase).trim() !== '') {
+                const c = normalizar(categoriaFirebase);
+                if (c.includes('anguill')) return 'anguilla';
+                if (c.includes('extranj')) return 'extranjera';
+                if (c.includes('dominican')) return 'dominicana';
+            }
+            if (key.includes('king lottery') || key.includes('florida') || key.includes('loteka')) return 'extranjera';
+            return 'dominicana';
+        }
+        function renderCatBadge(categoria) {
+            if (categoria === 'anguilla') return `<div class="cat-badge anguilla"><i class="fas fa-dragon"></i> Anguilla</div>`;
+            if (categoria === 'extranjera') return `<div class="cat-badge extranjera"><i class="fas fa-globe"></i> Extranjera</div>`;
+            return `<div class="cat-badge dominicana"><i class="fas fa-flag"></i> Dominicana</div>`;
         }
 
-        /* ============================================================
-           ESTADO DE CONEXIÓN
-        ============================================================ */
+        const CACHE_NAME = 'kiko-imagenes-v3';
+        const memoriaBlobs = new Map();
+        const promesasEnCurso = new Map();
+        const PLACEHOLDER_SVG = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='90'><rect width='100%25' height='100%25' fill='%23e2e8f0' rx='8'/></svg>";
+        async function guardarEnCacheNavegador(url) {
+            if (!url) return PLACEHOLDER_SVG;
+            if (memoriaBlobs.has(url)) return memoriaBlobs.get(url);
+            if (promesasEnCurso.has(url)) return promesasEnCurso.get(url);
+            const promesa = (async () => {
+                try {
+                    if (!('caches' in window)) { memoriaBlobs.set(url, url); return url; }
+                    const cache = await caches.open(CACHE_NAME);
+                    let respuesta = await cache.match(url);
+                    if (!respuesta) {
+                        respuesta = await fetch(url, { mode: 'cors', cache: 'force-cache', priority: 'high' });
+                        if (!respuesta.ok) throw new Error('Fetch failed: ' + respuesta.status);
+                        cache.put(url, respuesta.clone()).catch(() => {});
+                    }
+                    const blob = await respuesta.blob();
+                    const objectUrl = URL.createObjectURL(blob);
+                    memoriaBlobs.set(url, objectUrl);
+                    return objectUrl;
+                } catch (e) { return url; } finally { promesasEnCurso.delete(url); }
+            })();
+            promesasEnCurso.set(url, promesa);
+            return promesa;
+        }
+        (async () => {
+            try {
+                if (!('caches' in window)) return;
+                const keys = await caches.keys();
+                await Promise.all(keys.filter(k => k.startsWith('kiko-imagenes-') && k !== CACHE_NAME).map(k => caches.delete(k)));
+            } catch (e) {}
+        })();
         (function initConnectionBanner() {
-            const banner = document.createElement('div');
-            banner.id = 'connBanner';
-            document.body.appendChild(banner);
-
+            const banner = document.createElement('div'); banner.id = 'connBanner'; document.body.appendChild(banner);
             database.ref('.info/connected').on('value', snap => {
                 const online = snap.val() === true;
                 if (online) {
-                    banner.style.background = '#16a34a';
-                    banner.innerHTML = '<i class="fas fa-wifi"></i> En línea';
-                    banner.classList.add('show');
-                    setTimeout(() => banner.classList.remove('show'), 2500);
+                    banner.style.background = '#16a34a'; banner.innerHTML = '<i class="fas fa-wifi"></i> En línea';
+                    banner.classList.add('show'); setTimeout(() => banner.classList.remove('show'), 2500);
                 } else {
-                    banner.style.background = '#dc2626';
-                    banner.innerHTML = '<i class="fas fa-plug"></i> Sin conexión, reintentando...';
+                    banner.style.background = '#dc2626'; banner.innerHTML = '<i class="fas fa-plug"></i> Sin conexión, reintentando...';
                     banner.classList.add('show');
                 }
             });
         })();
-
-        /* ============================================================
-           ANUNCIOS EN TIEMPO REAL (CON CACHÉ)
-        ============================================================ */
         database.ref('anunciosList').on('value', async snap => {
             let anunciosBrutos = [];
-            if (snap.exists()) snap.forEach(child => {
-                const data = child.val();
-                if (data.activo !== false && data.url) anunciosBrutos.push(data);
-            });
-            
-            let anunciosProcesados = [];
-            // Procesar y guardar en caché
-            for (let ad of anunciosBrutos) {
-                const url = ad.url;
-                if (url.includes('.mp4') || url.includes('raw.githubusercontent')) {
-                    anunciosProcesados.push(ad);
-                } else {
-                    const urlCache = await guardarEnCacheNavegador(url);
-                    anunciosProcesados.push({ ...ad, urlCache });
-                }
-            }
-
-            slides = anunciosProcesados;
-            initSlider();
+            if (snap.exists()) snap.forEach(child => { const data = child.val(); if (data.activo !== false && data.url) anunciosBrutos.push(data); });
+            const anunciosProcesados = await Promise.all(anunciosBrutos.map(async (ad) => {
+                const url = ad.url; const esVideo = url.includes('.mp4');
+                if (esVideo) return ad; const urlCache = await guardarEnCacheNavegador(url);
+                return { ...ad, urlCache };
+            }));
+            slides = anunciosProcesados; initSlider();
         });
-
         function initSlider() {
             const container = document.getElementById('sliderAdContainer');
-            if (!container) return;
-
-            if (sliderIntervalId) { clearInterval(sliderIntervalId); sliderIntervalId = null; }
-
-            if (slides.length === 0) {
-                container.innerHTML = `<div style="color:var(--dorado); font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; height:100%;">BANCAS KIKO</div>`;
-                return;
-            }
-
-            container.innerHTML = '';
-            slideIndex = 0;
-
+            if (!container) return; if (sliderIntervalId) { clearInterval(sliderIntervalId); sliderIntervalId = null; }
+            if (slides.length === 0) { container.innerHTML = `<div style="color:var(--dorado); font-size:24px; font-weight:800; display:flex; align-items:center; justify-content:center; height:100%;">BANCAS KIKO</div>`; return; }
+            container.innerHTML = ''; slideIndex = 0;
             slides.forEach((ad, i) => {
-                const div = document.createElement('div');
-                div.className = 'slide' + (i === 0 ? ' active' : '');
-                const url = ad.url;
-                const urlFinal = ad.urlCache || url;
-                
-                if (url.includes('.mp4') || url.includes('raw.githubusercontent')) {
-                    div.innerHTML = `<video src="${urlFinal}" autoplay muted loop playsinline></video>`;
-                } else {
-                    div.innerHTML = `<img src="${urlFinal}" alt="Anuncio">`;
-                }
+                const div = document.createElement('div'); div.className = 'slide' + (i === 0 ? ' active' : '');
+                const url = ad.url; const esVideo = url.includes('.mp4');
+                if (esVideo) { div.innerHTML = `<video src="${url}" autoplay muted loop playsinline preload="metadata"></video>`; }
+                else { const srcInicial = ad.urlCache || url; div.innerHTML = `<img src="${srcInicial}" alt="Anuncio" fetchpriority="${i === 0 ? 'high' : 'low'}" decoding="async">`; }
                 container.appendChild(div);
             });
-
             if (slides.length > 1) {
                 sliderIntervalId = setInterval(() => {
                     const currentSlides = document.querySelectorAll('.slide');
@@ -649,68 +672,30 @@
                 }, 5000);
             }
         }
-
-        /* ============================================================
-           LOGOS EN TIEMPO REAL (CON CACHÉ)
-        ============================================================ */
         database.ref('web_kiko/logos').on('value', async snap => {
             const logosBrutos = snap.val() || {};
-            LOGOS = {}; // Limpiamos los logos en memoria
-
-            for (const key in logosBrutos) {
-                if (key === '_default') continue;
-                const url = logosBrutos[key];
-                if (url) {
-                    // Procesar y guardar en caché
-                    const urlCache = await guardarEnCacheNavegador(url);
-                    LOGOS[key] = urlCache;
-                }
-            }
-
-            if (TODOS_LOS_RESULTADOS.length > 0) {
-                renderProximos();
-                renderRecientes();
-            }
+            const entradas = Object.entries(logosBrutos).filter(([k, v]) => k !== '_default' && v);
+            const resultados = await Promise.all(entradas.map(async ([key, url]) => [key, await guardarEnCacheNavegador(url)]));
+            LOGOS = Object.fromEntries(resultados);
+            if (logosBrutos._default) { LOGOS._default = await guardarEnCacheNavegador(logosBrutos._default); }
+            if (TODOS_LOS_RESULTADOS.length > 0) { renderProximos(); renderRecientes(); }
         });
-
-        /* ============================================================
-           RESULTADOS EN TIEMPO REAL
-        ============================================================ */
         database.ref('sorteos_enloteria/resultados').on('value', snap => {
             TODOS_LOS_RESULTADOS = [];
-            if (snap.exists()) snap.forEach(child => {
-                const data = child.val();
-                if (data) TODOS_LOS_RESULTADOS.push(data);
-            });
+            if (snap.exists()) snap.forEach(child => { const data = child.val(); if (data) TODOS_LOS_RESULTADOS.push(data); });
             TODOS_LOS_RESULTADOS.sort((a, b) => new Date(b.enviadoEn) - new Date(a.enviadoEn));
-
-            renderProximos();
-            renderRecientes();
-            calcularEstadisticas();
+            renderProximos(); renderRecientes(); calcularEstadisticas();
         });
-
-        /* ============================================================
-           PRODUCTOS EN TIEMPO REAL
-        ============================================================ */
         database.ref('web_kiko/productos').on('value', async snap => {
             const grid = document.getElementById('productsGrid');
             if (!grid) return;
-            grid.innerHTML = '';
-
             if (snap.exists() && snap.numChildren() > 0) {
-                let productos = [];
-                snap.forEach(child => productos.push(child.val()));
-
-                for (let p of productos) {
-                    const urlFinal = await guardarEnCacheNavegador(p.logo || 'https://placehold.co/100x100?text=Logo');
-                    grid.innerHTML += `
-                        <div class="product-card">
-                            <img src="${urlFinal}" alt="${p.nombre}" loading="lazy">
-                            <h3>${p.nombre}</h3>
-                            <p>${p.descripcion || 'Servicio disponible en nuestras sucursales.'}</p>
-                        </div>
-                    `;
-                }
+                const productos = []; snap.forEach(child => productos.push(child.val()));
+                const html = await Promise.all(productos.map(async (p) => {
+                    const urlFinal = await guardarEnCacheNavegador(p.logo || PLACEHOLDER_SVG);
+                    return `<div class="product-card"><img src="${urlFinal}" alt="${p.nombre}" loading="lazy" decoding="async" width="70" height="70" onerror="this.onerror=null; this.src='${PLACEHOLDER_SVG}';"><h3>${p.nombre}</h3><p>${p.descripcion || 'Servicio disponible en nuestras sucursales.'}</p></div>`;
+                }));
+                grid.innerHTML = html.join('');
             } else {
                 const defaultProducts = [
                     { nombre: 'Venta de Loterías', desc: 'Juega Quinielas, Palés, Tripleta y Super Palé en todas las loterías.', logo: 'https://placehold.co/100x100/0033a0/fff?text=Loterias' },
@@ -718,246 +703,140 @@
                     { nombre: 'Pago de Servicios', desc: 'Paga tu luz, agua, cable e internet sin filas.', logo: 'https://placehold.co/100x100/001f5c/fff?text=Servicios' },
                     { nombre: 'Pago de Facturas', desc: 'Realiza el pago de tus facturas de forma rápida y segura.', logo: 'https://placehold.co/100x100/d90000/fff?text=Facturas' }
                 ];
-                for (let p of defaultProducts) {
+                const html = await Promise.all(defaultProducts.map(async (p) => {
                     const urlFinal = await guardarEnCacheNavegador(p.logo);
-                    grid.innerHTML += `
-                        <div class="product-card">
-                            <img src="${urlFinal}" alt="${p.nombre}" loading="lazy">
-                            <h3>${p.nombre}</h3>
-                            <p>${p.desc}</p>
-                        </div>
-                    `;
-                }
+                    return `<div class="product-card"><img src="${urlFinal}" alt="${p.nombre}" loading="lazy" decoding="async" width="70" height="70" onerror="this.onerror=null; this.src='${PLACEHOLDER_SVG}';"><h3>${p.nombre}</h3><p>${p.desc}</p></div>`;
+                }));
+                grid.innerHTML = html.join('');
             }
         });
-
-        /* ============================================================
-           HORA REAL DE LOTERÍA
-        ============================================================ */
-        function obtenerHoraRealLoteria(nombre, horaOriginal) {
-            const hoy = new Date().getDay();
-            const n = nombre.toLowerCase();
-            if (n.includes('leidsa') && n.includes('4:00')) {
-                if (hoy !== 0) return null;
-            }
-            if (n.includes('nacional') && n.includes('noche')) {
-                if (hoy === 0) return '06:00PM';
-                else return '09:00PM';
-            }
-            return horaOriginal;
-        }
-
-        /* ============================================================
-           RENDER PRÓXIMOS
-        ============================================================ */
         function renderProximos() {
-            const grid = document.getElementById('resultsGridProximos');
-            if (!grid) return;
-            const hoyStr = getFechaStr(0); 
-
+            const grid = document.getElementById('resultsGridProximos'); if (!grid) return;
+            const hoyStr = getFechaStr(0);
             const ultimoPorLoteria = new Map();
-            TODOS_LOS_RESULTADOS.forEach(r => {
-                if (!ultimoPorLoteria.has(r.nombre)) ultimoPorLoteria.set(r.nombre, r);
-            });
-
+            TODOS_LOS_RESULTADOS.forEach(r => { if (!ultimoPorLoteria.has(r.nombre)) ultimoPorLoteria.set(r.nombre, r); });
             proximosSorteesGlobal = [];
-
             ultimoPorLoteria.forEach(r => {
-                const horaReal = obtenerHoraRealLoteria(r.nombre, r.hora);
+                const horaReal = obtenerHoraRealLoteria(r.nombre, r.hora, hoyStr);
                 if (!horaReal) return;
-
                 const infoTiempo = calcularTiempoRestante(horaReal);
-                if (infoTiempo.minutosTotales >= 0 && infoTiempo.minutosTotales <= 180) {
-                    proximosSorteesGlobal.push({ ...r, horaMostrar: horaReal, infoTiempo });
-                }
+                if (infoTiempo.minutosTotales >= 0 && infoTiempo.minutosTotales <= 180) { proximosSorteesGlobal.push({ ...r, horaMostrar: horaReal, infoTiempo }); }
             });
-
             proximosSorteesGlobal.sort((a, b) => a.infoTiempo.minutosTotales - b.infoTiempo.minutosTotales);
             proximosSorteesGlobal = proximosSorteesGlobal.slice(0, 6);
-
-            if (proximosSorteesGlobal.length === 0) {
-                grid.innerHTML = `<div style="color:white; grid-column: 1/-1; text-align:center; padding: 20px;">No hay sorteos próximos en las siguientes horas.</div>`;
-                return;
-            }
-
+            if (proximosSorteesGlobal.length === 0) { grid.innerHTML = `<div style="color:white; grid-column: 1/-1; text-align:center; padding: 20px;">No hay sorteos próximos en las siguientes horas.</div>`; return; }
             grid.innerHTML = '';
             proximosSorteesGlobal.forEach(r => {
+                const nombreMostrar = aplicarRenombre(r.nombre, r.hora, hoyStr);
+                const categoria = getCategoriaLoteria(r.nombre, r.categoria);
                 const logoUrl = getLogo(r.nombre);
                 const nums = r.numeros || ['-','-','-'];
                 const esHoy = r.fechaRD === hoyStr;
                 const boloClass = esHoy ? 'hoy' : 'ayer';
                 const tagFecha = esHoy ? 'HOY' : 'AYER';
-
                 grid.innerHTML += `
                     <div class="card-loteria">
-                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'" loading="lazy">` : `<div class="loteria-nombre" style="height:65px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
-                        <div class="loteria-nombre">${r.nombre}</div>
+                        ${logoUrl ? `<img src="${logoUrl}" loading="lazy" decoding="async" width="220" height="90" onerror="this.onerror=null; this.src='${PLACEHOLDER_SVG}';">` : `<div class="loteria-nombre" style="height:90px; display:flex; align-items:center; justify-content:center;">${nombreMostrar}</div>`}
+                        <div class="loteria-nombre">${nombreMostrar}</div>
+                        ${renderCatBadge(categoria)}
                         <div class="timer-box" id="timer_${r.nombre.replace(/\s+/g, '')}"><i class="far fa-clock"></i> Calculando...</div>
                         <div class="bolos-container">
-                            <div class="bolo ${boloClass}">${nums[0]}</div>
-                            <div class="bolo ${boloClass}">${nums[1]}</div>
-                            <div class="bolo ${boloClass}">${nums[2]}</div>
+                            <div class="bolo-wrapper"><div class="bolo ${boloClass}">${nums[0]}</div><div class="bolo-label">1ra</div></div>
+                            <div class="bolo-wrapper"><div class="bolo ${boloClass}">${nums[1]}</div><div class="bolo-label">2da</div></div>
+                            <div class="bolo-wrapper"><div class="bolo ${boloClass}">${nums[2]}</div><div class="bolo-label">3ra</div></div>
                         </div>
                         <div class="fecha-tag">${tagFecha} · ${r.horaMostrar}</div>
                     </div>
                 `;
             });
-
             actualizarTimersEnVivo();
         }
-
-        /* ============================================================
-           RENDER RECIENTES
-        ============================================================ */
         function renderRecientes() {
-            const grid = document.getElementById('resultsGridRecientes');
-            if (!grid) return;
-            const hoyStr = getFechaStr(0); 
-            const top6 = TODOS_LOS_RESULTADOS.slice(0, 6);
-
-            if (top6.length === 0) {
-                grid.innerHTML = `<div style="color:var(--texto-gris); grid-column: 1/-1; text-align:center; padding: 20px;">Cargando resultados...</div>`;
-                return;
-            }
-
+            const grid = document.getElementById('resultsGridRecientes'); if (!grid) return;
+            const hoyStr = getFechaStr(0); const top6 = TODOS_LOS_RESULTADOS.slice(0, 6);
+            if (top6.length === 0) { grid.innerHTML = `<div style="color:var(--texto-gris); grid-column: 1/-1; text-align:center; padding: 20px;">Cargando resultados...</div>`; return; }
             grid.innerHTML = '';
             top6.forEach(r => {
+                const fechaResultado = r.fechaRD || getFechaStr(0);
+                const nombreMostrar = aplicarRenombre(r.nombre, r.hora, fechaResultado);
+                const horaMostrar = obtenerHoraRealLoteria(r.nombre, r.hora, fechaResultado) || r.hora || '';
+                const categoria = getCategoriaLoteria(r.nombre, r.categoria);
                 const logoUrl = getLogo(r.nombre);
                 const nums = r.numeros || ['--','--','--'];
                 const esHoy = r.fechaRD === hoyStr;
                 const boloClass = esHoy ? 'hoy' : 'ayer';
-
+                const fechaCorta = formatearFechaCorta(r.fecha, esHoy);
                 grid.innerHTML += `
                     <div class="card-loteria">
-                        ${logoUrl ? `<img src="${logoUrl}" onerror="this.style.display='none'" loading="lazy">` : `<div class="loteria-nombre" style="height:65px; display:flex; align-items:center; justify-content:center;">${r.nombre}</div>`}
-                        <div class="loteria-nombre">${r.nombre}</div>
+                        ${logoUrl ? `<img src="${logoUrl}" loading="lazy" decoding="async" width="220" height="90" onerror="this.onerror=null; this.src='${PLACEHOLDER_SVG}';">` : `<div class="loteria-nombre" style="height:90px; display:flex; align-items:center; justify-content:center;">${nombreMostrar}</div>`}
+                        <div class="loteria-nombre">${nombreMostrar}</div>
+                        ${renderCatBadge(categoria)}
                         <div class="bolos-container">
-                            <div class="bolo ${boloClass}">${nums[0]}</div>
-                            <div class="bolo ${boloClass}">${nums[1]}</div>
-                            <div class="bolo ${boloClass}">${nums[2]}</div>
+                            <div class="bolo-wrapper"><div class="bolo ${boloClass}">${nums[0]}</div><div class="bolo-label">1ra</div></div>
+                            <div class="bolo-wrapper"><div class="bolo ${boloClass}">${nums[1]}</div><div class="bolo-label">2da</div></div>
+                            <div class="bolo-wrapper"><div class="bolo ${boloClass}">${nums[2]}</div><div class="bolo-label">3ra</div></div>
                         </div>
-                        <div class="fecha-tag">${esHoy ? 'HOY' : (r.fecha || 'AYER')} · ${r.hora || ''}</div>
+                        <div class="fecha-tag">${fechaCorta} · ${horaMostrar}</div>
                     </div>
                 `;
             });
         }
-
-        /* ============================================================
-           ESTADÍSTICAS
-        ============================================================ */
         function calcularEstadisticas() {
             const conteo = {};
             TODOS_LOS_RESULTADOS.forEach(r => {
                 if (r.numeros && Array.isArray(r.numeros)) {
                     r.numeros.forEach(num => {
-                        if (num && num !== '--') {
-                            const n = num.toString().padStart(2, '0');
-                            conteo[n] = (conteo[n] || 0) + 1;
-                        }
+                        if (num && num !== '--') { const n = num.toString().padStart(2, '0'); conteo[n] = (conteo[n] || 0) + 1; }
                     });
                 }
             });
-
             const arrayNumeros = Object.keys(conteo).map(num => ({ num, count: conteo[num] }));
             arrayNumeros.sort((a, b) => b.count - a.count);
-
-            const topCalientes = arrayNumeros.slice(0, 5);
-            document.getElementById('statsCalientes').innerHTML = topCalientes.map(item =>
-                `<div class="stats-bolo" title="Ha salido ${item.count} veces">${item.num}</div>`
-            ).join('');
-
-            const topFrios = arrayNumeros.slice(-5).reverse();
-            document.getElementById('statsFrios').innerHTML = topFrios.map(item =>
-                `<div class="stats-bolo" title="Ha salido ${item.count} veces">${item.num}</div>`
-            ).join('');
+            document.getElementById('statsCalientes').innerHTML = arrayNumeros.slice(0, 5).map(item => `<div class="stats-bolo" title="Ha salido ${item.count} veces">${item.num}</div>`).join('');
+            document.getElementById('statsFrios').innerHTML = arrayNumeros.slice(-5).reverse().map(item => `<div class="stats-bolo" title="Ha salido ${item.count} veces">${item.num}</div>`).join('');
         }
-
-        /* ============================================================
-           TIMERS
-        ============================================================ */
         function actualizarTimersEnVivo() {
             proximosSorteesGlobal.forEach(r => {
-                const timerEl = document.getElementById(`timer_${r.nombre.replace(/\s+/g, '')}`);
-                if (!timerEl) return;
-
+                const timerEl = document.getElementById(`timer_${r.nombre.replace(/\s+/g, '')}`); if (!timerEl) return;
                 const info = calcularTiempoRestante(r.horaMostrar);
                 if (info.minutosTotales <= 0 && info.segundosTotales <= 0) {
                     timerEl.innerHTML = `<i class="fas fa-hourglass-end"></i> Sorteando...`;
-                    timerEl.style.background = "#fff3cd";
-                    timerEl.style.color = "#856404";
-                } else {
-                    timerEl.innerHTML = `<i class="far fa-clock"></i> ${info.texto}`;
-                }
+                    timerEl.style.background = "#fff3cd"; timerEl.style.color = "#856404";
+                } else { timerEl.innerHTML = `<i class="far fa-clock"></i> ${info.texto}`; }
             });
         }
-
         function calcularTiempoRestante(horaStr) {
             if (!horaStr) return { texto: '--:--', minutosTotales: 9999, segundosTotales: 0 };
             const match = horaStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
             if (!match) return { texto: '--:--', minutosTotales: 9999, segundosTotales: 0 };
-
-            let h = parseInt(match[1]);
-            const m = parseInt(match[2]);
-            const ampm = match[3].toUpperCase();
-
-            if (ampm === 'PM' && h !== 12) h += 12;
-            if (ampm === 'AM' && h === 12) h = 0;
-
-            const ahora = new Date();
-            const sorteo = new Date();
-            sorteo.setHours(h, m, 0, 0);
-
+            let h = parseInt(match[1]); const m = parseInt(match[2]); const ampm = match[3].toUpperCase();
+            if (ampm === 'PM' && h !== 12) h += 12; if (ampm === 'AM' && h === 12) h = 0;
+            const ahora = new Date(); const sorteo = new Date(); sorteo.setHours(h, m, 0, 0);
             let diff = sorteo - ahora;
-            if (diff < 0) {
-                sorteo.setDate(sorteo.getDate() + 1);
-                diff = sorteo - ahora;
-            }
-
+            if (diff < 0) { sorteo.setDate(sorteo.getDate() + 1); diff = sorteo - ahora; }
             const horasRestantes = Math.floor(diff / (1000 * 60 * 60));
             const minutosRestantes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const segundosRestantes = Math.floor((diff % (1000 * 60)) / 1000);
             const totalMinutos = (horasRestantes * 60) + minutosRestantes;
-
             let texto;
-            if (horasRestantes > 0) {
-                texto = `${horasRestantes.toString().padStart(2,'0')}h ${minutosRestantes.toString().padStart(2,'0')}m ${segundosRestantes.toString().padStart(2,'0')}s`;
-            } else {
-                texto = `${minutosRestantes.toString().padStart(2,'0')}m ${segundosRestantes.toString().padStart(2,'0')}s`;
-            }
-
+            if (horasRestantes > 0) { texto = `${horasRestantes.toString().padStart(2,'0')}h ${minutosRestantes.toString().padStart(2,'0')}m ${segundosRestantes.toString().padStart(2,'0')}s`; }
+            else { texto = `${minutosRestantes.toString().padStart(2,'0')}m ${segundosRestantes.toString().padStart(2,'0')}s`; }
             return { texto, minutosTotales: totalMinutos, segundosTotales: segundosRestantes };
         }
-
-        /* ============================================================
-           HELPER LOGOS
-        ============================================================ */
         function getLogo(nombre) {
-            if (!nombre) return '';
-            if (LOGOS[nombre]) return LOGOS[nombre];
-            const n = nombre.toLowerCase();
+            if (!nombre) return ''; if (LOGOS[nombre]) return LOGOS[nombre];
+            const n = normalizar(nombre);
             for (const [k, v] of Object.entries(LOGOS)) {
                 if (k === '_default') continue;
-                if (n.includes(k.toLowerCase()) || k.toLowerCase().includes(n)) return v;
+                const nk = normalizar(k);
+                if (n.includes(nk) || nk.includes(n)) return v;
             }
             return LOGOS['_default'] || '';
         }
-
-        /* ============================================================
-           LOOPS EN VIVO
-        ============================================================ */
         setInterval(actualizarTimersEnVivo, 1000);
-
-        setInterval(() => {
-            if (TODOS_LOS_RESULTADOS.length > 0) renderProximos();
-        }, 30000);
-
-        setInterval(() => {
-            if (TODOS_LOS_RESULTADOS.length > 0) calcularEstadisticas();
-        }, 5 * 60 * 1000);
-
-        setInterval(() => {
-            if (TODOS_LOS_RESULTADOS.length > 0) renderRecientes();
-        }, 60 * 1000);
+        setInterval(() => { if (TODOS_LOS_RESULTADOS.length > 0) renderProximos(); }, 30000);
+        setInterval(() => { if (TODOS_LOS_RESULTADOS.length > 0) calcularEstadisticas(); }, 5 * 60 * 1000);
+        setInterval(() => { if (TODOS_LOS_RESULTADOS.length > 0) renderRecientes(); }, 60 * 1000);
     </script>
 </body>
 </html>
