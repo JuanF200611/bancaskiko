@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promoción Navidad 2026 | Bancas Kiko</title>
+    <link rel="icon" type="image/png" href="nuevologo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --rojo-navidad: #d90000; --verde-navidad: #15803d; --dorado: #ffcc00; --azul-oscuro: #001f5c; --blanco: #ffffff; --texto-gris: #64748b; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: linear-gradient(135deg, #001f5c 0%, #0033a0 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px; position: relative; overflow: hidden; }
+        .snowflake { position: fixed; top: -10px; color: white; opacity: 0.8; animation: fall linear infinite; z-index: 1; pointer-events: none; }
+        @keyframes fall { to { transform: translateY(105vh); } }
+        .card { background: var(--blanco); border-radius: 20px; padding: 20px; max-width: 380px; width: 100%; box-shadow: 0 15px 30px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden; border: 4px solid var(--rojo-navidad); z-index: 10; max-height: 95vh; overflow-y: auto; }
+        .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: repeating-linear-gradient(45deg, var(--rojo-navidad), var(--rojo-navidad) 10px, var(--blanco) 10px, var(--blanco) 20px); }
+        .logo-img { height: 55px; margin-bottom: 5px; object-fit: contain; margin-top: 5px; }
+        .titulo-navidad { color: var(--rojo-navidad); font-size: 22px; font-weight: 900; margin-bottom: 2px; text-transform: uppercase; }
+        .subtitulo-navidad { color: var(--verde-navidad); font-size: 14px; font-weight: 800; margin-bottom: 15px; }
+        p { color: var(--texto-gris); font-size: 13px; margin-bottom: 15px; line-height: 1.4; }
+        .btn-file { background: #f8fafc; color: var(--azul-oscuro); border: 2px dashed var(--verde-navidad); padding: 15px; border-radius: 12px; cursor: pointer; display: block; font-weight: 800; font-size: 14px; transition: 0.3s; margin-bottom: 10px; }
+        .btn-file:hover { background: #dcfce7; }
+        .btn-file i { font-size: 25px; display: block; margin-bottom: 5px; color: var(--rojo-navidad); }
+        input[type="file"] { display: none; }
+        .btn { background: var(--verde-navidad); color: var(--blanco); border: none; padding: 12px; font-size: 14px; font-weight: 800; border-radius: 50px; cursor: pointer; width: 100%; transition: 0.3s; box-shadow: 0 4px 10px rgba(21,128,61,0.3); margin-bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(21,128,61,0.5); }
+        .btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; }
+        .btn-rojo { background: var(--rojo-navidad); box-shadow: 0 4px 10px rgba(217,0,0,0.3); }
+        .btn-rojo:hover { background: #b30000; box-shadow: 0 6px 15px rgba(217,0,0,0.5); }
+        .btn-volver { background: transparent; color: var(--texto-gris); box-shadow: none; margin-top: 10px; border: 2px solid #e2e8f0; text-decoration: none; }
+        .btn-volver:hover { background: #f1f5f9; color: var(--azul-oscuro); box-shadow: none; transform: none; }
+        input[type="text"], input[type="tel"] { width: 100%; padding: 10px; margin-bottom: 8px; border: 2px solid #cbd5e1; border-radius: 8px; font-family: 'Poppins'; box-sizing: border-box; text-align: center; font-size: 14px; transition: 0.3s; }
+        input[type="text"]:focus, input[type="tel"]:focus { border-color: var(--verde-navidad); outline: none; }
+        #status { margin-top: 10px; font-weight: 700; font-size: 13px; }
+        .hidden { display: none; }
+        .datos-ticket { background: #f8fafc; border: 2px dashed var(--dorado); padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: left; }
+        .dato-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; color: var(--texto-gris); }
+        .dato-row:last-child { margin-bottom: 0; }
+        .dato-row span:last-child { font-weight: 800; color: var(--azul-oscuro); }
+        .monto-destacado { color: var(--verde-navidad) !important; font-size: 16px; }
+        .alerta { padding: 12px; border-radius: 8px; margin-bottom: 10px; font-weight: 700; font-size: 13px; text-align: left; }
+        .alerta-error { background: #fee2e2; color: #b91c1c; border: 1px solid #f87171; }
+        .alerta-duplicado { background: #fff1f2; border: 2px solid var(--rojo-navidad); color: var(--rojo-navidad); padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; }
+        .alerta-duplicado i { font-size: 30px; margin-bottom: 5px; display: block; }
+        .alerta-duplicado h3 { font-size: 16px; margin-bottom: 3px; font-weight: 900; }
+        .alerta-duplicado p { color: #991b1b; font-size: 13px; margin: 0; }
+        .datos-cliente { background: #f0fdf4; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #bbf7d0; }
+        .datos-cliente label { font-size: 11px; font-weight: 800; color: var(--verde-navidad); display: block; text-align: left; margin-bottom: 3px; }
+        #santa-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 31, 92, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+        #santa-overlay.active { opacity: 1; pointer-events: auto; }
+        .santa-animacion { font-size: 70px; animation: bounce 1s infinite alternate; margin-bottom: 15px; }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-15px); } }
+        .mensaje-exito { color: var(--dorado); font-size: 22px; font-weight: 900; text-align: center; padding: 0 20px; }
+        .mensaje-sub { color: white; font-size: 14px; margin-top: 8px; text-align: center; }
+        .btn-cerrar-santa { margin-top: 20px; background: var(--rojo-navidad); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-size: 14px; font-weight: 800; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="snow-container"></div>
+
+    <div class="card">
+        <img src="nuevologo.png" alt="Bancas Kiko" class="logo-img">
+        <h1 class="titulo-navidad">¡Sorteo Navideño!</h1>
+        <h2 class="subtitulo-navidad">Bancas Kiko I & II</h2>
+        
+        <div id="paso1">
+            <p>Sube una foto clara de tu ticket para participar.</p>
+            <label for="fotoTicket" class="btn-file" id="labelFile">
+                <i class="fas fa-camera"></i> Escanear Ticket
+            </label>
+            <input type="file" id="fotoTicket" accept="image/*" capture="environment" onchange="document.getElementById('labelFile').innerHTML = '<i class=\'fas fa-check-circle\' style=\'color:green\'></i> ¡Foto lista!';">
+            <button class="btn" onclick="procesarFoto()" id="btnEscanear">Procesar Ticket</button>
+            <button class="btn btn-rojo" onclick="verificarMisTickets()">Ver mis tickets</button>
+            <a href="index.html" class="btn btn-volver">Volver al inicio</a>
+        </div>
+
+        <div id="paso2" class="hidden">
+            <div id="alertaResultado" class="alerta hidden"></div>
+            <div id="ticketDetalles" class="datos-ticket"></div>
+            
+            <div class="datos-cliente" id="formularioCliente">
+                <label>Número de Teléfono</label>
+                <input type="tel" id="telefono" placeholder="(809) 000-0000" maxlength="14" oninput="formatearTelefono(this)" required>
+                <label>Nombre Completo</label>
+                <input type="text" id="nombre" placeholder="Escribe tu nombre">
+            </div>
+            
+            <button class="btn" onclick="guardarTicket()" id="btnGuardar">Registrar Ticket</button>
+            <button class="btn btn-rojo" onclick="reiniciarFlujo()"><i class="fas fa-camera"></i> Escanear otro</button>
+            <a href="index.html" class="btn btn-volver">Volver al inicio</a>
+        </div>
+
+        <div id="paso3" class="hidden">
+            <h2 style="color: var(--rojo-navidad); font-size: 18px;">Mis Tickets</h2>
+            <p style="font-size:11px;">Ingresa tu teléfono para ver tus tickets.</p>
+            <input type="tel" id="telefonoBusqueda" placeholder="(809) 000-0000" maxlength="14" oninput="formatearTelefono(this)" style="margin-bottom: 10px;">
+            <button class="btn" onclick="buscarTicketsCliente()">Buscar</button>
+            <div id="listaMisTickets" style="margin-top: 10px; text-align: left; max-height: 150px; overflow-y: auto;"></div>
+            <button class="btn btn-rojo" style="margin-top: 10px;" onclick="reiniciarFlujo()">Volver</button>
+        </div>
+        <div id="status"></div>
+    </div>
+
+    <div id="santa-overlay">
+        <div class="santa-animacion">🎅🛷🦌</div>
+        <div class="mensaje-exito">¡Ticket Guardado Exitosamente!</div>
+        <div class="mensaje-sub">Santa ya tiene tu ticket.<br>¡Mucha suerte!</div>
+        <button class="btn-cerrar-santa" onclick="reiniciarFlujo(); document.getElementById('santa-overlay').classList.remove('active');">Escanear otro ticket</button>
+        <a href="index.html" style="color: white; margin-top: 10px; text-decoration: underline; font-size: 12px;">Volver al inicio</a>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script>
+        const firebaseConfig = { databaseURL: "https://pizarra-loteria-36ba5-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let datosTicketGlobal = {};
+        let fechasPromocion = { inicio: "2026-10-01", fin: "2026-12-31" };
+        const API_URL = 'https://kiko-ocr-api-production.up.railway.app';
+
+        function crearNieve() {
+            const container = document.getElementById('snow-container');
+            const copos = ['❅', '❆', '❄', '•'];
+            for (let i = 0; i < 30; i++) {
+                const copo = document.createElement('div');
+                copo.className = 'snowflake';
+                copo.innerText = copos[Math.floor(Math.random() * copos.length)];
+                copo.style.left = Math.random() * 100 + 'vw';
+                copo.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                copo.style.animationDelay = Math.random() * 5 + 's';
+                copo.style.opacity = Math.random() * 0.5 + 0.3;
+                copo.style.fontSize = (Math.random() * 8 + 8) + 'px';
+                container.appendChild(copo);
+            }
+        }
+        crearNieve();
+
+        db.ref('promocion_navidad_2026/config').on('value', snap => {
+            if (snap.exists()) fechasPromocion = snap.val();
+        });
+
+        function formatearTelefono(input) {
+            let val = input.value.replace(/\D/g, '');
+            if (val.length > 0) val = '(' + val;
+            if (val.length > 4) val = val.slice(0, 4) + ') ' + val.slice(4);
+            if (val.length > 9) val = val.slice(0, 9) + '-' + val.slice(9);
+            if (val.length > 14) val = val.slice(0, 14);
+            input.value = val;
+        }
+
+        function reiniciarFlujo() {
+            document.getElementById('paso1').classList.remove('hidden');
+            document.getElementById('paso2').classList.add('hidden');
+            document.getElementById('paso3').classList.add('hidden');
+            document.getElementById('fotoTicket').value = '';
+            document.getElementById('labelFile').innerHTML = '<i class="fas fa-camera"></i> Escanear Ticket';
+            document.getElementById('status').innerText = '';
+            document.getElementById('btnEscanear').disabled = false;
+            document.getElementById('btnGuardar').disabled = false;
+            document.getElementById('btnGuardar').classList.remove('hidden');
+            document.getElementById('formularioCliente').classList.remove('hidden');
+            document.getElementById('alertaResultado').classList.add('hidden');
+        }
+
+        function verificarMisTickets() {
+            document.getElementById('paso1').classList.add('hidden');
+            document.getElementById('paso3').classList.remove('hidden');
+            document.getElementById('listaMisTickets').innerHTML = '';
+        }
+
+        function organizarTicket(textoSucio) {
+            let lineas = textoSucio.split('\n').map(l => l.trim()).filter(l => l !== '');
+            let datos = { banca: "Desconocida", fecha: "", numeroTicket: "", monto: 0 };
+
+            const extraerMonto = (str) => {
+                let m = str.replace(/[\$S\s]/gi, '').replace(',', '.');
+                if (!m.includes('.') && m.length >= 3) m = m.slice(0, -2) + '.' + m.slice(-2);
+                return parseFloat(m) || 0;
+            };
+
+            lineas.forEach(linea => {
+                const lUpper = linea.toUpperCase();
+                if (lUpper.includes('KIKO I') && !lUpper.includes('KIKO II')) datos.banca = 'Kiko I';
+                if (lUpper.includes('KIKO II')) datos.banca = 'Kiko II';
+
+                const matchFecha = linea.match(/(\d{2}[-\/]\d{2}[-\/]\d{4})/);
+                if (matchFecha && !datos.fecha) {
+                    const parts = matchFecha[1].split(/[-\/]/);
+                    datos.fecha = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                }
+
+                const matchTicket = linea.match(/(?:Ticket|TICKET)[:\s]*(\d{7,9})/i);
+                if (matchTicket) datos.numeroTicket = matchTicket[1];
+                else if (!datos.numeroTicket && /^\d{7,9}\s*\*?$/.test(linea)) datos.numeroTicket = linea.replace(/\D/g, '');
+
+                const matchTotal = linea.match(/(?:TOTAL)[:\s]*[\$S]?\s*([\d\.\,]+)/i);
+                if (matchTotal) datos.monto = extraerMonto(matchTotal[1]);
+            });
+
+            if (datos.monto === 0) {
+                const posiblesMontos = textoSucio.match(/\d+[\.,]\d{2}/g);
+                if (posiblesMontos) datos.monto = extraerMonto(posiblesMontos[posiblesMontos.length - 1]);
+            }
+
+            return datos;
+        }
+
+        async function procesarFoto() {
+            const fileInput = document.getElementById('fotoTicket');
+            const statusDiv = document.getElementById('status');
+            const alerta = document.getElementById('alertaResultado');
+            
+            if (!fileInput.files.length) return alert("Selecciona una foto primero.");
+
+            statusDiv.innerText = "Analizando ticket...";
+            statusDiv.style.color = "#0033a0";
+            document.getElementById('btnEscanear').disabled = true;
+
+            const formData = new FormData();
+            formData.append('ticket', fileInput.files[0]);
+
+            try {
+                const res = await fetch(API_URL + '/api/ocr', { method: 'POST', body: formData });
+                const data = await res.json();
+                if (!data.success) throw new Error("Error de conexión con el servidor.");
+
+                datosTicketGlobal = organizarTicket(data.textoCrudo);
+
+                // VALIDACIÓN DE BANCA
+                if (datosTicketGlobal.banca === 'Desconocida') throw new Error("El ticket no pertenece a Bancas Kiko I o Kiko II. No es válido para esta promoción.");
+                
+                if (!datosTicketGlobal.numeroTicket || !datosTicketGlobal.fecha) throw new Error("La foto está borrosa. Por favor, pásate por la agencia con tu ticket original para que la agente lo registre manualmente.");
+                
+                if (datosTicketGlobal.fecha < fechasPromocion.inicio || datosTicketGlobal.fecha > fechasPromocion.fin) {
+                    throw new Error(`Ticket fuera de fecha. Válido del ${fechasPromocion.inicio.split('-').reverse().join('/')} al ${fechasPromocion.fin.split('-').reverse().join('/')}.`);
+                }
+
+                const ticketsRef = db.ref('promocion_navidad_2026/tickets');
+                const snapshot = await ticketsRef.orderByChild('numeroTicket').equalTo(datosTicketGlobal.numeroTicket).once('value');
+                
+                if (snapshot.exists()) throw new Error("DUPLICADO");
+
+                document.getElementById('paso1').classList.add('hidden');
+                document.getElementById('paso2').classList.remove('hidden');
+                
+                const fechaMostrar = datosTicketGlobal.fecha.split('-').reverse().join('/');
+                document.getElementById('ticketDetalles').innerHTML = `
+                    <div class="dato-row"><span>Ticket #:</span> <span>${datosTicketGlobal.numeroTicket}</span></div>
+                    <div class="dato-row"><span>Banca:</span> <span>${datosTicketGlobal.banca}</span></div>
+                    <div class="dato-row"><span>Fecha del Ticket:</span> <span>${fechaMostrar}</span></div>
+                    <div class="dato-row"><span>Monto:</span> <span class="monto-destacado">RD$ ${datosTicketGlobal.monto.toFixed(2)}</span></div>
+                `;
+                
+                statusDiv.innerText = "";
+
+            } catch (error) {
+                document.getElementById('paso1').classList.add('hidden');
+                document.getElementById('paso2').classList.remove('hidden');
+                
+                if (error.message === "DUPLICADO") {
+                    alerta.className = "alerta-duplicado";
+                    alerta.innerHTML = `<i class="fas fa-exclamation-triangle"></i><h3>Lo sentimos</h3><p>Este ticket ya aparece registrado en nuestra base de datos.</p>`;
+                    alerta.classList.remove('hidden');
+                    document.getElementById('formularioCliente').classList.add('hidden');
+                    document.getElementById('btnGuardar').classList.add('hidden');
+                    document.getElementById('ticketDetalles').innerHTML = "";
+                } else {
+                    alerta.className = "alerta alerta-error";
+                    alerta.innerHTML = `<i class="fas fa-times-circle"></i> ${error.message}`;
+                    alerta.classList.remove('hidden');
+                    document.getElementById('btnGuardar').classList.add('hidden');
+                    document.getElementById('ticketDetalles').innerHTML = "";
+                }
+                statusDiv.innerText = "";
+            }
+        }
+
+        async function guardarTicket() {
+            const telefono = document.getElementById('telefono').value.trim();
+            const nombre = document.getElementById('nombre').value.trim();
+            const statusDiv = document.getElementById('status');
+            
+            if (telefono.length < 14) return alert("Ingresa un teléfono válido (809) 000-0000");
+
+            statusDiv.innerText = "Guardando...";
+            statusDiv.style.color = "#0033a0";
+            document.getElementById('btnGuardar').disabled = true;
+
+            try {
+                const ticketsRef = db.ref('promocion_navidad_2026/tickets');
+                const snapshot = await ticketsRef.orderByChild('numeroTicket').equalTo(datosTicketGlobal.numeroTicket).once('value');
+                if (snapshot.exists()) throw new Error("Este ticket ya fue registrado anteriormente.");
+
+                const clienteRef = db.ref('promocion_navidad_2026/clientes').child(telefono);
+                const clienteSnap = await clienteRef.once('value');
+                let nombreFinal = nombre;
+
+                if (clienteSnap.exists()) {
+                    nombreFinal = clienteSnap.val().nombre;
+                } else {
+                    if (!nombre) throw new Error("Por favor ingresa tu nombre.");
+                    await clienteRef.set({ nombre: nombre, telefono: telefono });
+                }
+
+                await ticketsRef.push({
+                    telefono: telefono,
+                    nombreCliente: nombreFinal,
+                    numeroTicket: datosTicketGlobal.numeroTicket,
+                    banca: datosTicketGlobal.banca,
+                    fechaTicket: datosTicketGlobal.fecha, // FECHA DEL TICKET
+                    monto: datosTicketGlobal.monto,
+                    fechaRegistro: firebase.database.ServerValue.TIMESTAMP // FECHA DE REGISTRO
+                });
+
+                document.getElementById('santa-overlay').classList.add('active');
+
+            } catch (error) {
+                statusDiv.innerText = error.message;
+                statusDiv.style.color = "#d90000";
+                document.getElementById('btnGuardar').disabled = false;
+            }
+        }
+
+        async function buscarTicketsCliente() {
+            const telefono = document.getElementById('telefonoBusqueda').value.trim();
+            const lista = document.getElementById('listaMisTickets');
+            
+            if (telefono.length < 14) return alert("Ingresa un teléfono válido (809) 000-0000");
+
+            lista.innerHTML = '<p style="text-align:center; color:#64748b;">Buscando...</p>';
+
+            try {
+                const snapshot = await db.ref('promocion_navidad_2026/tickets').orderByChild('telefono').equalTo(telefono).once('value');
+                
+                if (!snapshot.exists()) {
+                    lista.innerHTML = '<p style="text-align:center; color:#d90000; font-weight:bold;">No se encontraron tickets.</p>';
+                    return;
+                }
+
+                lista.innerHTML = '<h3 style="color: var(--azul-oscuro); margin-bottom: 8px; font-size: 14px;">Tus Tickets:</h3>';
+                snapshot.forEach(child => {
+                    const t = child.val();
+                    const fechaMostrar = t.fechaTicket ? t.fechaTicket.split('-').reverse().join('/') : 'N/A';
+                    lista.innerHTML += `
+                        <div style="background: #f8fafc; padding: 8px; border-radius: 6px; margin-bottom: 6px; border-left: 4px solid var(--verde-navidad);">
+                            <p style="font-size: 11px; margin: 0; font-weight: bold; color: #1e293b;">Ticket #: ${t.numeroTicket}</p>
+                            <p style="font-size: 10px; margin: 0; color: #64748b;">Banca: ${t.banca} | Fecha: ${fechaMostrar}</p>
+                            <p style="font-size: 10px; margin: 0; color: #16a34a; font-weight: bold;">Monto: RD$ ${t.monto?.toFixed(2) || '0.00'}</p>
+                        </div>
+                    `;
+                });
+
+            } catch (error) {
+                lista.innerHTML = `<p style="text-align:center; color:#d90000;">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
