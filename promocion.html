@@ -8,45 +8,80 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --rojo-navidad: #d90000; --verde-navidad: #15803d; --dorado: #ffcc00; --azul-oscuro: #001f5c; --blanco: #ffffff; --texto-gris: #64748b; }
+        :root { 
+            --rojo-navidad: #d90000; --verde-navidad: #15803d; --dorado: #ffcc00; 
+            --azul-oscuro: #001f5c; --blanco: #ffffff; --texto-gris: #64748b; 
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: linear-gradient(135deg, #001f5c 0%, #0033a0 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px; position: relative; overflow: hidden; }
+        
+        body { 
+            background: linear-gradient(135deg, #001f5c 0%, #0033a0 100%);
+            min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 10px;
+            position: relative; overflow: hidden;
+        }
+
         .snowflake { position: fixed; top: -10px; color: white; opacity: 0.8; animation: fall linear infinite; z-index: 1; pointer-events: none; }
         @keyframes fall { to { transform: translateY(105vh); } }
-        .card { background: var(--blanco); border-radius: 20px; padding: 20px; max-width: 380px; width: 100%; box-shadow: 0 15px 30px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden; border: 4px solid var(--rojo-navidad); z-index: 10; max-height: 95vh; overflow-y: auto; }
+
+        .card { 
+            background: var(--blanco); border-radius: 20px; padding: 20px; max-width: 380px; width: 100%; 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5); text-align: center; position: relative; overflow: hidden;
+            border: 4px solid var(--rojo-navidad); z-index: 10; max-height: 95vh; overflow-y: auto;
+        }
         .card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 8px; background: repeating-linear-gradient(45deg, var(--rojo-navidad), var(--rojo-navidad) 10px, var(--blanco) 10px, var(--blanco) 20px); }
+
         .logo-img { height: 55px; margin-bottom: 5px; object-fit: contain; margin-top: 5px; }
         .titulo-navidad { color: var(--rojo-navidad); font-size: 22px; font-weight: 900; margin-bottom: 2px; text-transform: uppercase; }
         .subtitulo-navidad { color: var(--verde-navidad); font-size: 14px; font-weight: 800; margin-bottom: 15px; }
         p { color: var(--texto-gris); font-size: 13px; margin-bottom: 15px; line-height: 1.4; }
-        .btn-file { background: #f8fafc; color: var(--azul-oscuro); border: 2px dashed var(--verde-navidad); padding: 15px; border-radius: 12px; cursor: pointer; display: block; font-weight: 800; font-size: 14px; transition: 0.3s; margin-bottom: 10px; }
-        .btn-file:hover { background: #dcfce7; }
-        .btn-file i { font-size: 25px; display: block; margin-bottom: 5px; color: var(--rojo-navidad); }
+        
+        /* Estilos para los botones de subir foto */
+        .btn-file { 
+            background: #f8fafc; color: var(--azul-oscuro); border: 2px dashed var(--verde-navidad); 
+            padding: 12px 10px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-weight: 800; font-size: 14px; transition: 0.3s; margin-bottom: 10px; 
+        }
+        .btn-file:hover { background: #dcfce7; transform: scale(1.02); }
+        .btn-file i { font-size: 20px; color: var(--rojo-navidad); }
+        
+        .btn-file-gallery { border-color: #3b82f6; color: #1e3a8a; }
+        .btn-file-gallery:hover { background: #dbeafe; }
+        .btn-file-gallery i { color: #2563eb; }
+
         input[type="file"] { display: none; }
+        
         .btn { background: var(--verde-navidad); color: var(--blanco); border: none; padding: 12px; font-size: 14px; font-weight: 800; border-radius: 50px; cursor: pointer; width: 100%; transition: 0.3s; box-shadow: 0 4px 10px rgba(21,128,61,0.3); margin-bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 8px; }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(21,128,61,0.5); }
         .btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; }
+        
         .btn-rojo { background: var(--rojo-navidad); box-shadow: 0 4px 10px rgba(217,0,0,0.3); }
         .btn-rojo:hover { background: #b30000; box-shadow: 0 6px 15px rgba(217,0,0,0.5); }
         .btn-volver { background: transparent; color: var(--texto-gris); box-shadow: none; margin-top: 10px; border: 2px solid #e2e8f0; text-decoration: none; }
         .btn-volver:hover { background: #f1f5f9; color: var(--azul-oscuro); box-shadow: none; transform: none; }
+
         input[type="text"], input[type="tel"] { width: 100%; padding: 10px; margin-bottom: 8px; border: 2px solid #cbd5e1; border-radius: 8px; font-family: 'Poppins'; box-sizing: border-box; text-align: center; font-size: 14px; transition: 0.3s; }
         input[type="text"]:focus, input[type="tel"]:focus { border-color: var(--verde-navidad); outline: none; }
+
         #status { margin-top: 10px; font-weight: 700; font-size: 13px; }
         .hidden { display: none; }
+        
         .datos-ticket { background: #f8fafc; border: 2px dashed var(--dorado); padding: 12px; border-radius: 10px; margin-bottom: 15px; text-align: left; }
         .dato-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 13px; color: var(--texto-gris); }
         .dato-row:last-child { margin-bottom: 0; }
         .dato-row span:last-child { font-weight: 800; color: var(--azul-oscuro); }
         .monto-destacado { color: var(--verde-navidad) !important; font-size: 16px; }
+
         .alerta { padding: 12px; border-radius: 8px; margin-bottom: 10px; font-weight: 700; font-size: 13px; text-align: left; }
         .alerta-error { background: #fee2e2; color: #b91c1c; border: 1px solid #f87171; }
+        
         .alerta-duplicado { background: #fff1f2; border: 2px solid var(--rojo-navidad); color: var(--rojo-navidad); padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: center; }
         .alerta-duplicado i { font-size: 30px; margin-bottom: 5px; display: block; }
         .alerta-duplicado h3 { font-size: 16px; margin-bottom: 3px; font-weight: 900; }
         .alerta-duplicado p { color: #991b1b; font-size: 13px; margin: 0; }
+
         .datos-cliente { background: #f0fdf4; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #bbf7d0; }
         .datos-cliente label { font-size: 11px; font-weight: 800; color: var(--verde-navidad); display: block; text-align: left; margin-bottom: 3px; }
+
         #santa-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 31, 92, 0.95); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
         #santa-overlay.active { opacity: 1; pointer-events: auto; }
         .santa-animacion { font-size: 70px; animation: bounce 1s infinite alternate; margin-bottom: 15px; }
@@ -66,10 +101,21 @@
         
         <div id="paso1">
             <p>Sube una foto clara de tu ticket para participar.</p>
-            <label for="fotoTicket" class="btn-file" id="labelFile">
+            
+            <!-- BOTÓN 1: ESCANEAR CON CÁMARA -->
+            <label for="fotoTicketCamara" class="btn-file" id="labelCamara">
                 <i class="fas fa-camera"></i> Escanear Ticket
             </label>
-            <input type="file" id="fotoTicket" accept="image/*" capture="environment" onchange="document.getElementById('labelFile').innerHTML = '<i class=\'fas fa-check-circle\' style=\'color:green\'></i> ¡Foto lista!';">
+            <!-- Input oculto para la cámara (capture="environment" abre la cámara trasera) -->
+            <input type="file" id="fotoTicketCamara" accept="image/*" capture="environment" onchange="actualizarLabel('labelCamara', '¡Foto capturada!')">
+
+            <!-- BOTÓN 2: SUBIR DESDE GALERÍA -->
+            <label for="fotoTicketGaleria" class="btn-file btn-file-gallery" id="labelGaleria">
+                <i class="fas fa-image"></i> Subir desde el Teléfono
+            </label>
+            <!-- Input oculto para la galería (sin capture) -->
+            <input type="file" id="fotoTicketGaleria" accept="image/*" onchange="actualizarLabel('labelGaleria', '¡Foto seleccionada!')">
+
             <button class="btn" onclick="procesarFoto()" id="btnEscanear">Procesar Ticket</button>
             <button class="btn btn-rojo" onclick="verificarMisTickets()">Ver mis tickets</button>
             <a href="index.html" class="btn btn-volver">Volver al inicio</a>
@@ -99,6 +145,7 @@
             <div id="listaMisTickets" style="margin-top: 10px; text-align: left; max-height: 150px; overflow-y: auto;"></div>
             <button class="btn btn-rojo" style="margin-top: 10px;" onclick="reiniciarFlujo()">Volver</button>
         </div>
+
         <div id="status"></div>
     </div>
 
@@ -142,6 +189,19 @@
             if (snap.exists()) fechasPromocion = snap.val();
         });
 
+        function actualizarLabel(id, texto) {
+            const label = document.getElementById(id);
+            // Quitamos la otra selección para que no haya conflicto
+            if (id === 'labelCamara') {
+                document.getElementById('fotoTicketGaleria').value = '';
+                document.getElementById('labelGaleria').innerHTML = '<i class="fas fa-image"></i> Subir desde el Teléfono';
+            } else {
+                document.getElementById('fotoTicketCamara').value = '';
+                document.getElementById('labelCamara').innerHTML = '<i class="fas fa-camera"></i> Escanear Ticket';
+            }
+            label.innerHTML = `<i class="fas fa-check-circle" style="color:green"></i> ${texto}`;
+        }
+
         function formatearTelefono(input) {
             let val = input.value.replace(/\D/g, '');
             if (val.length > 0) val = '(' + val;
@@ -155,8 +215,12 @@
             document.getElementById('paso1').classList.remove('hidden');
             document.getElementById('paso2').classList.add('hidden');
             document.getElementById('paso3').classList.add('hidden');
-            document.getElementById('fotoTicket').value = '';
-            document.getElementById('labelFile').innerHTML = '<i class="fas fa-camera"></i> Escanear Ticket';
+            
+            document.getElementById('fotoTicketCamara').value = '';
+            document.getElementById('fotoTicketGaleria').value = '';
+            document.getElementById('labelCamara').innerHTML = '<i class="fas fa-camera"></i> Escanear Ticket';
+            document.getElementById('labelGaleria').innerHTML = '<i class="fas fa-image"></i> Subir desde el Teléfono';
+            
             document.getElementById('status').innerText = '';
             document.getElementById('btnEscanear').disabled = false;
             document.getElementById('btnGuardar').disabled = false;
@@ -209,18 +273,21 @@
         }
 
         async function procesarFoto() {
-            const fileInput = document.getElementById('fotoTicket');
+            const fileCamara = document.getElementById('fotoTicketCamara').files[0];
+            const fileGaleria = document.getElementById('fotoTicketGaleria').files[0];
+            const archivoFinal = fileCamara || fileGaleria;
+
             const statusDiv = document.getElementById('status');
             const alerta = document.getElementById('alertaResultado');
             
-            if (!fileInput.files.length) return alert("Selecciona una foto primero.");
+            if (!archivoFinal) return alert("Por favor, escanea o sube una foto primero.");
 
             statusDiv.innerText = "Analizando ticket...";
             statusDiv.style.color = "#0033a0";
             document.getElementById('btnEscanear').disabled = true;
 
             const formData = new FormData();
-            formData.append('ticket', fileInput.files[0]);
+            formData.append('ticket', archivoFinal);
 
             try {
                 const res = await fetch(API_URL + '/api/ocr', { method: 'POST', body: formData });
@@ -229,9 +296,7 @@
 
                 datosTicketGlobal = organizarTicket(data.textoCrudo);
 
-                // VALIDACIÓN DE BANCA
                 if (datosTicketGlobal.banca === 'Desconocida') throw new Error("El ticket no pertenece a Bancas Kiko I o Kiko II. No es válido para esta promoción.");
-                
                 if (!datosTicketGlobal.numeroTicket || !datosTicketGlobal.fecha) throw new Error("La foto está borrosa. Por favor, pásate por la agencia con tu ticket original para que la agente lo registre manualmente.");
                 
                 if (datosTicketGlobal.fecha < fechasPromocion.inicio || datosTicketGlobal.fecha > fechasPromocion.fin) {
@@ -310,9 +375,9 @@
                     nombreCliente: nombreFinal,
                     numeroTicket: datosTicketGlobal.numeroTicket,
                     banca: datosTicketGlobal.banca,
-                    fechaTicket: datosTicketGlobal.fecha, // FECHA DEL TICKET
+                    fechaTicket: datosTicketGlobal.fecha,
                     monto: datosTicketGlobal.monto,
-                    fechaRegistro: firebase.database.ServerValue.TIMESTAMP // FECHA DE REGISTRO
+                    fechaRegistro: firebase.database.ServerValue.TIMESTAMP
                 });
 
                 document.getElementById('santa-overlay').classList.add('active');
