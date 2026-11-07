@@ -35,7 +35,6 @@
         .subtitulo-navidad { color: var(--verde-navidad); font-size: 14px; font-weight: 800; margin-bottom: 15px; }
         p { color: var(--texto-gris); font-size: 13px; margin-bottom: 15px; line-height: 1.4; }
         
-        /* Estilos para los botones de subir foto */
         .btn-file { 
             background: #f8fafc; color: var(--azul-oscuro); border: 2px dashed var(--verde-navidad); 
             padding: 12px 10px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -48,6 +47,10 @@
         .btn-file-gallery:hover { background: #dbeafe; }
         .btn-file-gallery i { color: #2563eb; }
 
+        .btn-manual { border-color: #cbd5e1; color: #475569; margin-top: 10px; background: #fff; }
+        .btn-manual:hover { background: #f1f5f9; border-color: #94a3b8; }
+        .btn-manual i { color: #475569; }
+
         input[type="file"] { display: none; }
         
         .btn { background: var(--verde-navidad); color: var(--blanco); border: none; padding: 12px; font-size: 14px; font-weight: 800; border-radius: 50px; cursor: pointer; width: 100%; transition: 0.3s; box-shadow: 0 4px 10px rgba(21,128,61,0.3); margin-bottom: 8px; display: flex; justify-content: center; align-items: center; gap: 8px; }
@@ -59,8 +62,8 @@
         .btn-volver { background: transparent; color: var(--texto-gris); box-shadow: none; margin-top: 10px; border: 2px solid #e2e8f0; text-decoration: none; }
         .btn-volver:hover { background: #f1f5f9; color: var(--azul-oscuro); box-shadow: none; transform: none; }
 
-        input[type="text"], input[type="tel"] { width: 100%; padding: 10px; margin-bottom: 8px; border: 2px solid #cbd5e1; border-radius: 8px; font-family: 'Poppins'; box-sizing: border-box; text-align: center; font-size: 14px; transition: 0.3s; }
-        input[type="text"]:focus, input[type="tel"]:focus { border-color: var(--verde-navidad); outline: none; }
+        input[type="text"], input[type="tel"], input[type="number"], input[type="date"] { width: 100%; padding: 10px; margin-bottom: 8px; border: 2px solid #cbd5e1; border-radius: 8px; font-family: 'Poppins'; box-sizing: border-box; text-align: center; font-size: 14px; transition: 0.3s; }
+        input[type="text"]:focus, input[type="tel"]:focus, input[type="number"]:focus, input[type="date"]:focus { border-color: var(--verde-navidad); outline: none; }
 
         #status { margin-top: 10px; font-weight: 700; font-size: 13px; }
         .hidden { display: none; }
@@ -102,21 +105,22 @@
         <div id="paso1">
             <p>Sube una foto clara de tu ticket para participar.</p>
             
-            <!-- BOTÓN 1: ESCANEAR CON CÁMARA -->
             <label for="fotoTicketCamara" class="btn-file" id="labelCamara">
                 <i class="fas fa-camera"></i> Escanear Ticket
             </label>
-            <!-- Input oculto para la cámara (capture="environment" abre la cámara trasera) -->
             <input type="file" id="fotoTicketCamara" accept="image/*" capture="environment" onchange="actualizarLabel('labelCamara', '¡Foto capturada!')">
 
-            <!-- BOTÓN 2: SUBIR DESDE GALERÍA -->
             <label for="fotoTicketGaleria" class="btn-file btn-file-gallery" id="labelGaleria">
                 <i class="fas fa-image"></i> Subir desde el Teléfono
             </label>
-            <!-- Input oculto para la galería (sin capture) -->
             <input type="file" id="fotoTicketGaleria" accept="image/*" onchange="actualizarLabel('labelGaleria', '¡Foto seleccionada!')">
 
             <button class="btn" onclick="procesarFoto()" id="btnEscanear">Procesar Ticket</button>
+            
+            <label for="modoManual" class="btn-file btn-manual" onclick="abrirModoManual()">
+                <i class="fas fa-keyboard"></i> Ingresar mis datos manualmente
+            </label>
+            
             <button class="btn btn-rojo" onclick="verificarMisTickets()">Ver mis tickets</button>
             <a href="index.html" class="btn btn-volver">Volver al inicio</a>
         </div>
@@ -135,6 +139,33 @@
             <button class="btn" onclick="guardarTicket()" id="btnGuardar">Registrar Ticket</button>
             <button class="btn btn-rojo" onclick="reiniciarFlujo()"><i class="fas fa-camera"></i> Escanear otro</button>
             <a href="index.html" class="btn btn-volver">Volver al inicio</a>
+        </div>
+
+        <!-- NUEVO FORMULARIO MANUAL -->
+        <div id="pasoManual" class="hidden">
+            <h2 style="color: var(--rojo-navidad); font-size: 18px; margin-bottom: 10px;">Registro Manual</h2>
+            <p style="font-size:11px; margin-bottom: 15px;">Ingresa los datos de tu ticket si la cámara falló.</p>
+            
+            <div class="datos-cliente">
+                <label>Nombre Completo</label>
+                <input type="text" id="manNombre" placeholder="Escribe tu nombre">
+                <label>Número de Teléfono</label>
+                <input type="tel" id="manTelefono" placeholder="(809) 000-0000" maxlength="14" oninput="formatearTelefono(this)">
+                <label>Número de Ticket</label>
+                <input type="text" id="manTicket" placeholder="Ej: 12345678">
+                <label>Banca</label>
+                <select id="manBanca" style="width:100%; padding:10px; border:2px solid #cbd5e1; border-radius:8px; margin-bottom:8px; font-family:'Poppins'; font-size:14px;">
+                    <option value="Kiko I">Kiko I</option>
+                    <option value="Kiko II">Kiko II</option>
+                </select>
+                <label>Fecha del Ticket</label>
+                <input type="date" id="manFecha">
+                <label>Monto del Ticket (RD$)</label>
+                <input type="number" id="manMonto" placeholder="Ej: 150.00" step="0.01">
+            </div>
+
+            <button class="btn" onclick="guardarTicketManual()" id="btnGuardarManual">Registrar Ticket Manual</button>
+            <button class="btn btn-rojo" onclick="reiniciarFlujo()">Volver</button>
         </div>
 
         <div id="paso3" class="hidden">
@@ -165,7 +196,7 @@
         const db = firebase.database();
 
         let datosTicketGlobal = {};
-        let fechasPromocion = { inicio: "2026-10-01", fin: "2026-12-31" };
+        let fechasPromocion = { inicio: "2026-10-01", fin: "2026-12-31", montoMinimo: 1 };
         const API_URL = 'https://kiko-ocr-api-production.up.railway.app';
 
         function crearNieve() {
@@ -186,12 +217,14 @@
         crearNieve();
 
         db.ref('promocion_navidad_2026/config').on('value', snap => {
-            if (snap.exists()) fechasPromocion = snap.val();
+            if (snap.exists()) {
+                fechasPromocion = snap.val();
+                if (!fechasPromocion.montoMinimo) fechasPromocion.montoMinimo = 1;
+            }
         });
 
         function actualizarLabel(id, texto) {
             const label = document.getElementById(id);
-            // Quitamos la otra selección para que no haya conflicto
             if (id === 'labelCamara') {
                 document.getElementById('fotoTicketGaleria').value = '';
                 document.getElementById('labelGaleria').innerHTML = '<i class="fas fa-image"></i> Subir desde el Teléfono';
@@ -214,6 +247,7 @@
         function reiniciarFlujo() {
             document.getElementById('paso1').classList.remove('hidden');
             document.getElementById('paso2').classList.add('hidden');
+            document.getElementById('pasoManual').classList.add('hidden');
             document.getElementById('paso3').classList.add('hidden');
             
             document.getElementById('fotoTicketCamara').value = '';
@@ -227,6 +261,11 @@
             document.getElementById('btnGuardar').classList.remove('hidden');
             document.getElementById('formularioCliente').classList.remove('hidden');
             document.getElementById('alertaResultado').classList.add('hidden');
+        }
+
+        function abrirModoManual() {
+            document.getElementById('paso1').classList.add('hidden');
+            document.getElementById('pasoManual').classList.remove('hidden');
         }
 
         function verificarMisTickets() {
@@ -296,11 +335,15 @@
 
                 datosTicketGlobal = organizarTicket(data.textoCrudo);
 
-                if (datosTicketGlobal.banca === 'Desconocida') throw new Error("El ticket no pertenece a Bancas Kiko I o Kiko II. No es válido para esta promoción.");
-                if (!datosTicketGlobal.numeroTicket || !datosTicketGlobal.fecha) throw new Error("La foto está borrosa. Por favor, pásate por la agencia con tu ticket original para que la agente lo registre manualmente.");
+                if (datosTicketGlobal.banca === 'Desconocida') throw new Error("El ticket no pertenece a Bancas Kiko I o Kiko II.");
+                if (!datosTicketGlobal.numeroTicket || !datosTicketGlobal.fecha) throw new Error("La foto está borrosa. Usa el registro manual.");
                 
                 if (datosTicketGlobal.fecha < fechasPromocion.inicio || datosTicketGlobal.fecha > fechasPromocion.fin) {
                     throw new Error(`Ticket fuera de fecha. Válido del ${fechasPromocion.inicio.split('-').reverse().join('/')} al ${fechasPromocion.fin.split('-').reverse().join('/')}.`);
+                }
+
+                if (datosTicketGlobal.monto < fechasPromocion.montoMinimo) {
+                    throw new Error(`El monto del ticket (RD$${datosTicketGlobal.monto.toFixed(2)}) es menor al mínimo requerido (RD$${fechasPromocion.montoMinimo.toFixed(2)}).`);
                 }
 
                 const ticketsRef = db.ref('promocion_navidad_2026/tickets');
@@ -386,6 +429,63 @@
                 statusDiv.innerText = error.message;
                 statusDiv.style.color = "#d90000";
                 document.getElementById('btnGuardar').disabled = false;
+            }
+        }
+
+        async function guardarTicketManual() {
+            const nombre = document.getElementById('manNombre').value.trim();
+            const telefono = document.getElementById('manTelefono').value.trim();
+            const numeroTicket = document.getElementById('manTicket').value.trim();
+            const banca = document.getElementById('manBanca').value;
+            const fechaTicket = document.getElementById('manFecha').value;
+            const monto = parseFloat(document.getElementById('manMonto').value) || 0;
+            const statusDiv = document.getElementById('status');
+
+            if (!nombre || !telefono || !numeroTicket || !fechaTicket) return alert("Llena todos los campos obligatorios.");
+
+            if (fechaTicket < fechasPromocion.inicio || fechaTicket > fechasPromocion.fin) {
+                return alert(`Ticket fuera de fecha. Válido del ${fechasPromocion.inicio.split('-').reverse().join('/')} al ${fechasPromocion.fin.split('-').reverse().join('/')}.`);
+            }
+
+            if (monto < fechasPromocion.montoMinimo) {
+                return alert(`El monto del ticket (RD$${monto.toFixed(2)}) es menor al mínimo requerido (RD$${fechasPromocion.montoMinimo.toFixed(2)}).`);
+            }
+
+            statusDiv.innerText = "Guardando manual...";
+            statusDiv.style.color = "#0033a0";
+            document.getElementById('btnGuardarManual').disabled = true;
+
+            try {
+                const ticketsRef = db.ref('promocion_navidad_2026/tickets');
+                const snapshot = await ticketsRef.orderByChild('numeroTicket').equalTo(numeroTicket).once('value');
+                if (snapshot.exists()) throw new Error("Este ticket ya fue registrado anteriormente.");
+
+                const clienteRef = db.ref('promocion_navidad_2026/clientes').child(telefono);
+                const clienteSnap = await clienteRef.once('value');
+                let nombreFinal = nombre;
+
+                if (clienteSnap.exists()) {
+                    nombreFinal = clienteSnap.val().nombre;
+                } else {
+                    await clienteRef.set({ nombre: nombre, telefono: telefono });
+                }
+
+                await ticketsRef.push({
+                    telefono: telefono,
+                    nombreCliente: nombreFinal,
+                    numeroTicket: numeroTicket,
+                    banca: banca,
+                    fechaTicket: fechaTicket,
+                    monto: monto,
+                    fechaRegistro: firebase.database.ServerValue.TIMESTAMP
+                });
+
+                document.getElementById('santa-overlay').classList.add('active');
+
+            } catch (error) {
+                statusDiv.innerText = error.message;
+                statusDiv.style.color = "#d90000";
+                document.getElementById('btnGuardarManual').disabled = false;
             }
         }
 
