@@ -7,10 +7,12 @@
     <link rel="icon" type="image/png" href="nuevologo.png">
 
     <link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
     <link rel="preconnect" href="https://pizarra-loteria-36ba5-default-rtdb.firebaseio.com" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="dns-prefetch" href="https://raw.githubusercontent.com">
+    <link rel="dns-prefetch" href="https://res.cloudinary.com">
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 
     <link rel="preload" as="image" href="nuevologo.png" fetchpriority="high">
@@ -84,7 +86,7 @@
         }
 
         .logo-container { display: flex; align-items: center; gap: 10px; text-decoration: none; z-index: 10; }
-        .logo-container img { height: 60px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); } /* LOGO MAS GRANDE */
+        .logo-container img { height: 60px; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5)); }
         .logo-text { display: flex; flex-direction: column; line-height: 1; }
         .logo-title { font-size: 20px; font-weight: 900; color: white; text-transform: uppercase; letter-spacing: 0.5px; }
         .logo-title span { color: var(--dorado); }
@@ -479,12 +481,41 @@
             } catch (e) {}
         })();
 
+        // ================================================================
+        // ✅ LOGOS CON SOPORTE DE ALIAS COMPARTIDOS
+        // Si un valor empieza con "@", significa "usar el logo de [Base]".
+        // Ej: "Leidsa Tarde": "@Leidsa"
+        // ================================================================
+        function resolverAliasLogo(logosBrutos, nombre) {
+            if (!nombre) return '';
+            const valor = logosBrutos[nombre];
+            if (!valor || typeof valor !== 'string') return '';
+            if (valor.startsWith('@')) {
+                const base = valor.slice(1);
+                const baseValor = logosBrutos[base];
+                // Evita ciclos y alias rotos
+                if (baseValor && typeof baseValor === 'string' && !baseValor.startsWith('@')) return baseValor;
+                return '';
+            }
+            return valor;
+        }
+
         database.ref('web_kiko/logos').on('value', async snap => {
             const logosBrutos = snap.val() || {};
             const entradas = Object.entries(logosBrutos).filter(([k, v]) => k !== '_default' && v);
-            const resultados = await Promise.all(entradas.map(async ([key, url]) => [key, await guardarEnCacheNavegador(url)]));
-            LOGOS = Object.fromEntries(resultados);
-            if (logosBrutos._default) { LOGOS._default = await guardarEnCacheNavegador(logosBrutos._default); }
+
+            // Resolver alias antes de cachear: cada entrada obtiene su URL real
+            const resultados = await Promise.all(entradas.map(async ([key, valor]) => {
+                const urlReal = resolverAliasLogo(logosBrutos, key);
+                if (!urlReal) return [key, ''];
+                return [key, await guardarEnCacheNavegador(urlReal)];
+            }));
+
+            LOGOS = Object.fromEntries(resultados.filter(([, v]) => v));
+
+            if (logosBrutos._default) {
+                LOGOS._default = await guardarEnCacheNavegador(logosBrutos._default);
+            }
             renderResultados(getResultadosFiltrados());
         });
 
